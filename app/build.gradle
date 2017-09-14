@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     aaptOptions {
         noCompress 'dat'
     }
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
         applicationId "com.android.inputmethod.pinyin"
 
         externalNativeBuild {
@@ -33,4 +34,5 @@ android {
 }
 
 dependencies {
+    compile "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
 }

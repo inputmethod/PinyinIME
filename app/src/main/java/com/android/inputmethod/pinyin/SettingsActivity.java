@@ -26,7 +26,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.widget.Toast;
 
+import com.typany.keyboard.sound.SoundPickerUtils;
 import com.typany.resource.ResourceManager;
 
 import java.util.List;
@@ -75,6 +77,20 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onResume() {
         super.onResume();
         updateWidgets();
+        showSoundInfo();
+    }
+
+    private void showSoundInfo() {
+        List<String> soundList = SoundPickerUtils.getShortSoundList(getApplicationContext(), 11);
+        String tips = null == soundList ? "" : "Total size is " + soundList.size();
+        Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
+        if (null != soundList) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String s : soundList) {
+                stringBuilder.append(s).append("\n");
+            }
+            Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
