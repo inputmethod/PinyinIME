@@ -81,7 +81,7 @@ public class SoundHolder implements IResourceHolder {
         if (null == conf) {
             Log.e(TAG, "reloadAssert failed for " + assertFolderName);
         } else {
-            String folderName = "sound/suite/" + assertFolderName + File.separator;
+            String folderName = "sound/suite/" + assertFolderName;
             List<String> fileNameList = conf.getAllFileNameList();
             for (String fileName : fileNameList) {
                 AssetFileDescriptor fd = SoundPickerUtils.openFd(context, folderName, fileName);

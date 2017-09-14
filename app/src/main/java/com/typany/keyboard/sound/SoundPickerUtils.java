@@ -5,8 +5,14 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,10 +68,10 @@ public class SoundPickerUtils {
                 ArrayList<String> fileList = new ArrayList<>();
                 for (String name : subFileNames) {
                     if (configJsonName.equalsIgnoreCase(name)) {
-                        conf = parseJsonConfig(name);
+                        conf = parseJsonConfig(am, assertFolderName, name);
                     } else if (configFileName.equalsIgnoreCase(name)) {
                         if (null == conf) {
-                            conf = parseIniConfig(name);
+                            conf = parseIniConfig(am, assertFolderName, name);
                         }
                     } else {
                         fileList.add(name);
@@ -87,11 +93,53 @@ public class SoundPickerUtils {
         }
     }
 
-    private static SoundPackageConf parseIniConfig(String iniFileName) {
+    private static SoundPackageConf parseIniConfig(AssetManager am, String folderName, String iniFileName) {
         return null;
     }
 
-    private static SoundPackageConf parseJsonConfig(String jsonFileName) {
+    private static SoundPackageConf parseJsonConfig(AssetManager am, String folderName, String jsonFileName) {
+        BufferedReader reader = null;
+        String laststr = "";
+        try {
+            InputStream inputStream = am.open(soundFolder + File.separator + folderName + File.separator + jsonFileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+            reader = new BufferedReader(inputStreamReader);
+            String tempString = null;
+            while((tempString = reader.readLine()) != null){
+                laststr += tempString;
+            }
+            reader.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }finally{
+            if(reader != null){
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        try {
+            JSONObject jsonObject = new JSONObject(laststr);
+            SoundPackageConf conf = new SoundPackageConf();
+            conf.folder = folderName;
+            conf.name = jsonObject.optString("KEY_TONE_SUITE");
+            conf.defaultFileName = jsonObject.optString("KEY_TONE_DEFAULT");
+            conf.keyFileName = jsonObject.optString("KEY_TONE_NORMAL");
+            conf.funcFileName = jsonObject.optString("KEY_TONE_FUNCTION");
+            conf.toolFileName = jsonObject.optString("KEY_TONE_TOOL");
+            conf.candidateFileName = jsonObject.optString("KEY_TONE_CANDIDATE");
+            conf.previewFileName = jsonObject.optString("Preview");
+
+            // todo: load extra key sound
+            //
+            return conf;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

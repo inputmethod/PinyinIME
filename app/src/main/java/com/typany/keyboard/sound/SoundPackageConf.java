@@ -18,6 +18,9 @@ import java.util.Map;
 public class SoundPackageConf {
     private static final String TAG = SoundPackageConf.class.getSimpleName();
 
+    public String folder;
+    public String name;
+
     // file name
     public String defaultFileName;
     public String keyFileName;
@@ -63,6 +66,13 @@ public class SoundPackageConf {
         i = tryAddNameToTrack(toolFileName, i);
         i = tryAddNameToTrack(candidateFileName, i);
         tryAddNameToTrack(previewFileName, i);
+
+        fileNameList.add(defaultFileName);
+        fileNameList.add(keyFileName);
+        fileNameList.add(funcFileName);
+        fileNameList.add(toolFileName);
+        fileNameList.add(candidateFileName);
+        fileNameList.add(previewFileName);
 
         Log.d(TAG, "unique file list size " + fileNameList.size() + ", map size " + nameToTracks.size()
                 + ", key map size " + keyToFileName.size());

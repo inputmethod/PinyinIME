@@ -1,5 +1,6 @@
 {
     "KEY_TONE_SUITE" : "钢琴(半音阶)",
+    "KEY_TONE_DEFAULT" : "01-G1.aiff",
     "KEY_TONE_NORMAL" : "01-G1.aiff",
     "KEY_TONE_FUNCTION" : "12-D3.aiff",
     "KEY_TONE_TOOL" : "zryj.aiff",
