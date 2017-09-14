@@ -27,6 +27,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.android.inputmethod.pinyin.SoftKeyboard.KeyRow;
+import com.typany.resource.ResourceManager;
 
 import java.util.List;
 
@@ -387,7 +388,8 @@ public class SoftKeyboardView extends View {
 
     private void tryPlayKeyDown() {
         if (Settings.getKeySound()) {
-            mSoundManager.playKeyDown();
+//            mSoundManager.playKeyDown();
+            ResourceManager.getInstance().sound.playKeyTone(1.0f);
         }
     }
 

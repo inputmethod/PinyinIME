@@ -47,6 +47,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.typany.resource.ResourceManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -181,6 +183,7 @@ public class PinyinIME extends InputMethodService {
         }
         super.onCreate();
 
+        ResourceManager.getInstance().onCreate(getApplicationContext());
         startPinyinDecoderService();
         mImEn = new EnglishInputProcessor();
         Settings.getInstance(PreferenceManager

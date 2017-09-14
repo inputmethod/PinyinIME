@@ -16,8 +16,9 @@
 
 package com.android.inputmethod.pinyin;
 
-import java.util.List;
-
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -25,10 +26,10 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import com.android.inputmethod.pinyin.Settings;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+
+import com.typany.resource.ResourceManager;
+
+import java.util.List;
 
 /**
  * Setting activity of Pinyin IME.
@@ -41,11 +42,13 @@ public class SettingsActivity extends PreferenceActivity implements
     private CheckBoxPreference mKeySoundPref;
     private CheckBoxPreference mVibratePref;
     private CheckBoxPreference mPredictionPref;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
+
+        ResourceManager.getInstance().onCreate(getApplicationContext());
 
         PreferenceScreen prefSet = getPreferenceScreen();
 
@@ -55,6 +58,8 @@ public class SettingsActivity extends PreferenceActivity implements
                 .findPreference(getString(R.string.setting_vibrate_key));
         mPredictionPref = (CheckBoxPreference) prefSet
                 .findPreference(getString(R.string.setting_prediction_key));
+
+        mKeySoundPref.setOnPreferenceChangeListener(this);
         
         prefSet.setOnPreferenceChangeListener(this);
         
@@ -89,6 +94,7 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
+        ResourceManager.getInstance().sound.playKeyTone(1.0f);
         return true;
     }
 
