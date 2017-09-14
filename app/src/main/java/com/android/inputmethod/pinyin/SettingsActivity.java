@@ -30,7 +30,9 @@ import android.widget.Toast;
 
 import com.typany.keyboard.sound.SoundPickerUtils;
 import com.typany.resource.ResourceManager;
+import com.typany.resource.SoundHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,6 +53,7 @@ public class SettingsActivity extends PreferenceActivity implements
         addPreferencesFromResource(R.xml.settings);
 
         ResourceManager.getInstance().onCreate(getApplicationContext());
+        soundHolder = ResourceManager.getInstance().sound;
 
         PreferenceScreen prefSet = getPreferenceScreen();
 
@@ -71,6 +74,8 @@ public class SettingsActivity extends PreferenceActivity implements
         updatePreference(prefSet, getString(R.string.setting_advanced_key));
         
         updateWidgets();
+
+        loadSoundAssets();
     }
 
     @Override
@@ -78,19 +83,6 @@ public class SettingsActivity extends PreferenceActivity implements
         super.onResume();
         updateWidgets();
         showSoundInfo();
-    }
-
-    private void showSoundInfo() {
-        List<String> soundList = SoundPickerUtils.getShortSoundList(getApplicationContext(), 11);
-        String tips = null == soundList ? "" : "Total size is " + soundList.size();
-        Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
-        if (null != soundList) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String s : soundList) {
-                stringBuilder.append(s).append("\n");
-            }
-            Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -110,7 +102,8 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        ResourceManager.getInstance().sound.playKeyTone(1.0f);
+        soundHolder.playKeyTone(1.0f);
+        applySound();
         return true;
     }
 
@@ -134,4 +127,34 @@ public class SettingsActivity extends PreferenceActivity implements
                 parentPref.removePreference(preference);
         }
     }
+
+    private SoundHolder soundHolder;
+    private int currentIndex = 0;
+    private final List<String> soundList = new ArrayList<>();
+    private void loadSoundAssets() {
+        if (soundList.isEmpty()) {
+            List<String> loadList = SoundPickerUtils.getShortSoundList(getApplicationContext(), 11);
+            if (null != loadList) {
+                soundList.addAll(loadList);
+            }
+        }
+    }
+
+    private void showSoundInfo() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : soundList) {
+            stringBuilder.append(s).append("\n");
+        }
+        stringBuilder.append("current index:").append(currentIndex);
+        Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+
+        applySound();
+    }
+
+    private void applySound() {
+        soundHolder.reloadAssert(getApplicationContext(), soundList.get(currentIndex));
+        soundHolder.playCurrentPreview(1.0f);
+        currentIndex = (++currentIndex) % soundList.size();
+    }
+
 }

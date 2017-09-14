@@ -6,13 +6,19 @@ import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.text.TextUtils;
+import android.util.Log;
+
+import com.typany.keyboard.sound.SoundPackageConf;
+import com.typany.keyboard.sound.SoundPickerUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class SoundHolder implements IResourceHolder {
     private static final String SOUND_TRACK_FILENAME = "tap_key.ogg";
+    private static final String TAG = SoundHolder.class.getSimpleName();
 
     private SoundPool mSoundPool;
     private int mSoundTrackId = -1;
@@ -82,35 +88,58 @@ public class SoundHolder implements IResourceHolder {
         // todo: load and model key tone suite
     }
 
+    private SoundPackageConf conf = null;
+    public void reloadAssert(Context context, String assertFolderName) {
+        stopCurrentSound();
+        conf = SoundPickerUtils.loadSound(context, assertFolderName);
+        if (null == conf) {
+            Log.e(TAG, "reloadAssert failed for " + assertFolderName);
+        } else {
+            List<String> fileNameList = conf.getAllFileNameList();
+        }
+    }
+
+    public void playCurrentPreview(float vol) {
+        if (null != conf) {
+            int previewId = conf.getPreviewTrack();
+            playTone(previewId, vol);
+        }
+    }
+
     public void reload(Context appContext, String filePath) {
         stopCurrentSound();
 
         try {
             File newKeyToneFile = new File(filePath);
             if (TextUtils.isEmpty(filePath) || !new File(filePath).exists() || newKeyToneFile.length() > 102400) {
-                String soundFile = "sound/" + SOUND_TRACK_FILENAME;
-                AssetFileDescriptor descriptor = null;
-                try {
-                    AssetManager am = appContext.getAssets();
-                    descriptor = am.openFd(soundFile);
-                    mSoundTrackId = mSoundPool.load(descriptor, 1);
-                } finally {
-                    if (descriptor != null) {
-                        try {
-                            descriptor.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                }
+                AssetFileDescriptor descriptor = SoundPickerUtils.openFd(appContext, "sound", SOUND_TRACK_FILENAME);
+                mSoundTrackId = tryLoadAsset(descriptor);
             } else if (mSoundPool != null) {
                 mSoundTrackId = mSoundPool.load(filePath, 1);
 //                SettingMgr.getInstance(appContext).setValue(SettingField.TYPING_SOUND_ENABLE, "true");
                 // todo: save enable flag
+            } else {
+                Log.e(TAG, "reload while sound pool is null.");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             mSoundTrackId = -1;
+        }
+    }
+
+    private int tryLoadAsset(AssetFileDescriptor descriptor) {
+        try {
+            return mSoundPool.load(descriptor, 1);
+        } catch (Exception e) {
+            return  -1;
+        } finally {
+            if (descriptor != null) {
+                try {
+                    descriptor.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 
@@ -122,9 +151,13 @@ public class SoundHolder implements IResourceHolder {
     }
 
     public void playKeyTone(float vol) {
+        playTone(mSoundTrackId, vol);
+    }
+
+    public void playTone(int trackId, float vol) {
         if (mSoundPool != null) {
-            if (mSoundTrackId != -1) {
-                mPlayTrackId = mSoundPool.play(mSoundTrackId, vol, vol, 1, 0, 1);
+            if (trackId != -1) {
+                mPlayTrackId = mSoundPool.play(trackId, vol, vol, 1, 0, 1);
             }
         } else {
             throw new RuntimeException("Use IME resource without IME service instance existing.");
