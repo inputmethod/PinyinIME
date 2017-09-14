@@ -18,6 +18,7 @@ package com.android.inputmethod.pinyin;
 
 import java.util.List;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -26,6 +27,8 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import com.android.inputmethod.pinyin.Settings;
+import com.android.inputmethod.utils.ImmUtils;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -64,6 +67,17 @@ public class SettingsActivity extends PreferenceActivity implements
         updatePreference(prefSet, getString(R.string.setting_advanced_key));
         
         updateWidgets();
+
+        Context appContext = getApplicationContext();
+        if (ImmUtils.isImeEnabled(appContext, PinyinIME.class)) {
+            if (ImmUtils.isImeDefault(appContext, PinyinIME.class)) {
+                // do nothing now.
+            } else {
+                ImmUtils.showInputmethodPicker(appContext);
+            }
+        } else {
+            ImmUtils.showInputmethodSetting(appContext);
+        }
     }
 
     @Override
@@ -89,6 +103,9 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if ("setting_sound_key".equals(preference.getKey())) {
+            ImmUtils.showIme(getApplicationContext());
+        }
         return true;
     }
 
