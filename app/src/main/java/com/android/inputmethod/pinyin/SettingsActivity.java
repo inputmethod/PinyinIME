@@ -16,6 +16,7 @@
 
 package com.android.inputmethod.pinyin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -28,6 +29,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import com.android.inputmethod.utils.ImmUtils;
 import com.typany.keyboard.sound.SoundPickerUtils;
 import com.typany.resource.ResourceManager;
 import com.typany.resource.SoundHolder;
@@ -76,6 +78,17 @@ public class SettingsActivity extends PreferenceActivity implements
         updateWidgets();
 
         loadSoundAssets();
+
+        Context appContext = getApplicationContext();
+        if (ImmUtils.isImeEnabled(appContext, PinyinIME.class)) {
+            if (ImmUtils.isImeDefault(appContext, PinyinIME.class)) {
+                // do nothing now.
+            } else {
+                ImmUtils.showInputmethodPicker(appContext);
+            }
+        } else {
+            ImmUtils.showInputmethodSetting(appContext);
+        }
     }
 
     @Override
@@ -104,6 +117,11 @@ public class SettingsActivity extends PreferenceActivity implements
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         soundHolder.playKeyTone(1.0f);
         applySound();
+
+        if ("setting_sound_key".equals(preference.getKey())) {
+            ImmUtils.showIme(getApplicationContext());
+        }
+
         return true;
     }
 

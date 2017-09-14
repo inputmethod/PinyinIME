@@ -1,0 +1,8 @@
+{
+    "KEY_TONE_SUITE" : "机械键盘(青轴)",
+    "KEY_TONE_NORMAL" : "zhong.aiff",
+    "KEY_TONE_FUNCTION" : "qing.aiff",
+    "KEY_TONE_TOOL" : "qing.aiff",
+    "KEY_TONE_CANDIDATE" : "qingman.aiff",
+    "Preview" : "qingman.aiff"
+}

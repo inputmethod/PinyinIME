@@ -33,25 +33,9 @@ public class SoundHolder implements IResourceHolder {
         // modified by sunhang : change stream type from FX_KEYPRESS_STANDARD to STREAM_MUSIC.
         // this can fix a issue(http://10.134.74.226:880/browse/GIME-1429)
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        String soundFile = "sound/" + SOUND_TRACK_FILENAME;
-        AssetFileDescriptor descriptor = null;
-        AssetManager am = appContext.getAssets();
-        try {
-            descriptor = am.openFd(soundFile);
-            mSoundTrackId = mSoundPool.load(descriptor, 1);
-//            SLog.i(CommonUtils.DEFAULT_TAG, "sound pool >> " + "onCreate" + mSoundTrackId);
-        } catch (IOException e) {
-            e.printStackTrace();
-            mSoundTrackId = -1;
-        } finally {
-            if (descriptor != null) {
-                try {
-                    descriptor.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
+        AssetFileDescriptor descriptor = SoundPickerUtils.openFd(appContext, "sound", SOUND_TRACK_FILENAME);
+        mSoundTrackId = tryLoadAsset(descriptor);
+
         releaseThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -89,13 +73,22 @@ public class SoundHolder implements IResourceHolder {
     }
 
     private SoundPackageConf conf = null;
+    private String confName = null;
     public void reloadAssert(Context context, String assertFolderName) {
         stopCurrentSound();
+        confName = assertFolderName;
         conf = SoundPickerUtils.loadSound(context, assertFolderName);
         if (null == conf) {
             Log.e(TAG, "reloadAssert failed for " + assertFolderName);
         } else {
+            String folderName = "sound/suite/" + assertFolderName + File.separator;
             List<String> fileNameList = conf.getAllFileNameList();
+            for (String fileName : fileNameList) {
+                AssetFileDescriptor fd = SoundPickerUtils.openFd(context, folderName, fileName);
+                conf.addTrack(fileName, tryLoadAsset(fd));
+            }
+            Log.d(TAG, "reloadAssert " + confName + ", add track " + conf.trackIds.size() +
+                    ", name2track size " + conf.nameToTracks.size());
         }
     }
 

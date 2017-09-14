@@ -24,6 +24,7 @@ public class SoundPackageConf {
     public String funcFileName;
     public String toolFileName;
     public String candidateFileName;
+    public String previewFileName;
 
     // sound track id list ready for play
     public final List<Integer> trackIds = new ArrayList<>();
@@ -36,9 +37,13 @@ public class SoundPackageConf {
     // default file name. if none of these file name existing, no sound play for that key.
     public final Map<Integer, String> keyToFileName = new HashMap<>();
 
-    // todo: get track id for preview sound effect
     public int getPreviewTrack() {
-        return -1;
+        int trackId = -1;
+        if (nameToTracks.containsKey(previewFileName)) {
+            trackId = nameToTracks.get(nameToTracks);
+        }
+        Log.d(TAG, "getPreviewTrack " + trackId + " for " + previewFileName);
+        return trackId;
     }
 
     public List<String> getAllFileNameList() {
@@ -52,11 +57,12 @@ public class SoundPackageConf {
                 i = tryAddNameToTrack(s, i);
             }
         }
-        tryAddNameToTrack(defaultFileName, i);
-        tryAddNameToTrack(keyFileName, i);
-        tryAddNameToTrack(funcFileName, i);
-        tryAddNameToTrack(toolFileName, i);
-        tryAddNameToTrack(candidateFileName, i);
+        i = tryAddNameToTrack(defaultFileName, i);
+        i = tryAddNameToTrack(keyFileName, i);
+        i = tryAddNameToTrack(funcFileName, i);
+        i = tryAddNameToTrack(toolFileName, i);
+        i = tryAddNameToTrack(candidateFileName, i);
+        tryAddNameToTrack(previewFileName, i);
 
         Log.d(TAG, "unique file list size " + fileNameList.size() + ", map size " + nameToTracks.size()
                 + ", key map size " + keyToFileName.size());
@@ -77,6 +83,7 @@ public class SoundPackageConf {
         checkFileExisting(fileList, funcFileName);
         checkFileExisting(fileList, toolFileName);
         checkFileExisting(fileList, candidateFileName);
+        checkFileExisting(fileList, previewFileName);
         Collection<String> values = keyToFileName.values();
         if (null != values) {
             Iterator<String> it = values.iterator();
@@ -91,5 +98,10 @@ public class SoundPackageConf {
         if (!TextUtils.isEmpty(fileName) && !fileList.contains(fileName)) {
             Log.e(TAG, "checkFileExisting fail, could not found config file: " + fileName);
         }
+    }
+
+    public void addTrack(String fileName, int trackId) {
+        trackIds.add(trackId);
+        nameToTracks.put(fileName, trackId);
     }
 }
