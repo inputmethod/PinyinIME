@@ -2,6 +2,7 @@ package com.typany.keyboard.sound;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,5 +122,20 @@ public class SoundPackageConf {
         }
 
         return trackIds;
+    }
+
+    public int getTrackIdByCode(int keyCode) {
+        if (KeyEvent.KEYCODE_0 < keyCode && keyCode < KeyEvent.KEYCODE_9 ||
+                KeyEvent.KEYCODE_A < keyCode && keyCode < KeyEvent.KEYCODE_Z ) {
+            return nameToTrackId.get(keyFileName);
+        } else if (KeyEvent.KEYCODE_DEL == keyCode || KeyEvent.KEYCODE_ENTER == keyCode || KeyEvent.KEYCODE_SPACE == keyCode) {
+            return nameToTrackId.get(funcFileName);
+        } else if (KeyEvent.KEYCODE_SHIFT_LEFT == keyCode || KeyEvent.KEYCODE_SHIFT_RIGHT == keyCode) {
+            return nameToTrackId.get(toolFileName);
+        } else if (KeyEvent.KEYCODE_BACK == keyCode || KeyEvent.KEYCODE_DEL == keyCode) {
+            return nameToTrackId.get(candidateFileName);
+        } else {
+            return nameToTrackId.get(defaultFileName);
+        }
     }
 }

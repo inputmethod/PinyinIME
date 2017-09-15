@@ -225,7 +225,7 @@ public class SoftKeyboardView extends View {
         mKeyPressed = true;
 
         if (!movePress) {
-            tryPlayKeyDown();
+            tryPlayKeyDown(mSoftKeyDown.getKeyCode());
             tryVibrate();
         }
 
@@ -386,10 +386,10 @@ public class SoftKeyboardView extends View {
         mVibrator.vibrate(mVibratePattern, -1);
     }
 
-    private void tryPlayKeyDown() {
+    private void tryPlayKeyDown(int keyCode) {
         if (Settings.getKeySound()) {
 //            mSoundManager.playKeyDown();
-            ResourceManager.getInstance().sound.playKeyTone(1.0f);
+            ResourceManager.getInstance().sound.playKeyTone(keyCode, 1.0f);
         }
     }
 

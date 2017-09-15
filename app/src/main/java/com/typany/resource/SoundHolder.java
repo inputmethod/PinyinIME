@@ -154,6 +154,11 @@ public class SoundHolder implements IResourceHolder {
         playTone(mSoundTrackId, vol);
     }
 
+    public void playKeyTone(int keyCode, float vol) {
+        int trackId = null == conf ? mSoundTrackId : conf.getTrackIdByCode(keyCode);
+        playTone(trackId, vol);
+    }
+
     public void playTone(int trackId, float vol) {
         Log.d(TAG, "playTone trackId " + trackId + ", volume " + vol);
         if (mSoundPool != null) {
