@@ -89,6 +89,7 @@ public class SoundPickerUtils {
     // todo: check conf item and all file name it reference to existing in fileList.
     private static void ensureConfigAndFile(SoundPackageConf conf, ArrayList<String> fileList) {
         if (null != conf) {
+            conf.getReady();
             conf.checkFileExisting(fileList);
         }
     }

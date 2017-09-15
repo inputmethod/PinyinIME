@@ -45,6 +45,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     private static String TAG = "SettingsActivity";
 
+    private Preference nextSoundPref;
     private CheckBoxPreference mKeySoundPref;
     private CheckBoxPreference mVibratePref;
     private CheckBoxPreference mPredictionPref;
@@ -59,6 +60,9 @@ public class SettingsActivity extends PreferenceActivity implements
 
         PreferenceScreen prefSet = getPreferenceScreen();
 
+        nextSoundPref = prefSet
+                .findPreference(getString(R.string.setting_next_sound_key));
+
         mKeySoundPref = (CheckBoxPreference) prefSet
                 .findPreference(getString(R.string.setting_sound_key));
         mVibratePref = (CheckBoxPreference) prefSet
@@ -66,18 +70,35 @@ public class SettingsActivity extends PreferenceActivity implements
         mPredictionPref = (CheckBoxPreference) prefSet
                 .findPreference(getString(R.string.setting_prediction_key));
 
-        mKeySoundPref.setOnPreferenceChangeListener(this);
-        
+        nextSoundPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                applySound();
+                return true;
+            }
+        });
+
+        mKeySoundPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                soundHolder.stopCurrentSound();
+                if ((boolean)newValue) {
+                    soundHolder.playKeyTone(1.0f);
+                } else {
+                    soundHolder.playCurrentPreview(1.0f);
+                }
+                return true;
+            }
+        });
+
         prefSet.setOnPreferenceChangeListener(this);
-        
+
         Settings.getInstance(PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext()));
 
         updatePreference(prefSet, getString(R.string.setting_advanced_key));
         
         updateWidgets();
-
-        loadSoundAssets();
 
         Context appContext = getApplicationContext();
         if (ImmUtils.isImeEnabled(appContext, PinyinIME.class)) {
@@ -89,13 +110,19 @@ public class SettingsActivity extends PreferenceActivity implements
         } else {
             ImmUtils.showInputmethodSetting(appContext);
         }
+
+        loadSoundAssets();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateWidgets();
+
         showSoundInfo();
+        if (currentIndex == 0) {
+            applySound();
+        }
     }
 
     @Override
@@ -115,9 +142,6 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        soundHolder.playKeyTone(1.0f);
-        applySound();
-
         if ("setting_sound_key".equals(preference.getKey())) {
             ImmUtils.showIme(getApplicationContext());
         }
@@ -165,14 +189,11 @@ public class SettingsActivity extends PreferenceActivity implements
         }
         stringBuilder.append("current index:").append(currentIndex);
         Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
-
-        applySound();
     }
 
     private void applySound() {
-        soundHolder.reloadAssert(getApplicationContext(), soundList.get(currentIndex));
-        soundHolder.playCurrentPreview(1.0f);
-        currentIndex = (++currentIndex) % soundList.size();
+        soundHolder.reloadAssert(getApplicationContext(), soundList.get(currentIndex % soundList.size()));
+        currentIndex++;
     }
 
 }

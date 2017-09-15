@@ -1,9 +1,9 @@
 {
     "KEY_TONE_SUITE" : "系统音",
-    "KEY_TONE_DEFAULT" : "abc.aiff",
-    "KEY_TONE_NORMAL" : "abc.aiff",
-    "KEY_TONE_FUNCTION" : "del.aiff",
-    "KEY_TONE_TOOL" : "ok.aiff",
-    "KEY_TONE_CANDIDATE" : "ok.aiff",
-    "Preview" : "ok.aiff"
+    "KEY_TONE_DEFAULT" : "abc.ogg",
+    "KEY_TONE_NORMAL" : "abc.ogg",
+    "KEY_TONE_FUNCTION" : "del.ogg",
+    "KEY_TONE_TOOL" : "ok.ogg",
+    "KEY_TONE_CANDIDATE" : "ok.ogg",
+    "Preview" : "ok.ogg"
 }

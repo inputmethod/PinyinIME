@@ -2,7 +2,6 @@ package com.typany.resource;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.text.TextUtils;
@@ -60,6 +59,14 @@ public class SoundHolder implements IResourceHolder {
             try {
                 //these two methods may lead to unexpcted error.
                 mSoundPool.stop(mPlayTrackId);
+
+                if (null != conf) {
+                    List<Integer> trackIds = conf.getAllTrackIds();
+                    Log.d(TAG, "stopCurrentSound, try to stop track id size: " + trackIds.size());
+                    for (int id : trackIds) {
+                        mSoundPool.stop(id);
+                    }
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -87,8 +94,8 @@ public class SoundHolder implements IResourceHolder {
                 AssetFileDescriptor fd = SoundPickerUtils.openFd(context, folderName, fileName);
                 conf.addTrack(fileName, tryLoadAsset(fd));
             }
-            Log.d(TAG, "reloadAssert " + confName + ", add track " + conf.trackIds.size() +
-                    ", name2track size " + conf.nameToTracks.size());
+            Log.d(TAG, "reloadAssert " + confName + ", add track " + conf.trackFileNames.size() +
+                    ", name2track size " + conf.nameToTrackId.size());
         }
     }
 
@@ -148,6 +155,7 @@ public class SoundHolder implements IResourceHolder {
     }
 
     public void playTone(int trackId, float vol) {
+        Log.d(TAG, "playTone trackId " + trackId + ", volume " + vol);
         if (mSoundPool != null) {
             if (trackId != -1) {
                 mPlayTrackId = mSoundPool.play(trackId, vol, vol, 1, 0, 1);

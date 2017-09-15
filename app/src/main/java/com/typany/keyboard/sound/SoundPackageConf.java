@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,11 +30,11 @@ public class SoundPackageConf {
     public String candidateFileName;
     public String previewFileName;
 
-    // sound track id list ready for play
-    public final List<Integer> trackIds = new ArrayList<>();
+    // sound track file name list ready for play, in the order of put into map.
+    public final List<String> trackFileNames = new ArrayList<>();
 
-    // map file name to its track id
-    public final Map<String, Integer> nameToTracks = new HashMap<>();
+    // map file name to its track index
+    public final Map<String, Integer> nameToTrackId = new HashMap<>();
 
     // map key code to sound file name so any key could be configured to a specific sound, if
     // a key is not configured, then it will be map to either the category sound file name or
@@ -42,49 +43,25 @@ public class SoundPackageConf {
 
     public int getPreviewTrack() {
         int trackId = -1;
-        if (nameToTracks.containsKey(previewFileName)) {
-            trackId = nameToTracks.get(nameToTracks);
+        if (nameToTrackId.containsKey(previewFileName)) {
+            trackId = nameToTrackId.get(previewFileName);
         }
         Log.d(TAG, "getPreviewTrack " + trackId + " for " + previewFileName);
         return trackId;
     }
 
     public List<String> getAllFileNameList() {
-        ArrayList<String> fileNameList = new ArrayList<>();
-        int i = 0;
-        Collection<String> values = keyToFileName.values();
-        if (null != values) {
-            Iterator<String> it = values.iterator();
-            while (it.hasNext()) {
-                String s = it.next();
-                i = tryAddNameToTrack(s, i);
-            }
-        }
-        i = tryAddNameToTrack(defaultFileName, i);
-        i = tryAddNameToTrack(keyFileName, i);
-        i = tryAddNameToTrack(funcFileName, i);
-        i = tryAddNameToTrack(toolFileName, i);
-        i = tryAddNameToTrack(candidateFileName, i);
-        tryAddNameToTrack(previewFileName, i);
-
-        fileNameList.add(defaultFileName);
-        fileNameList.add(keyFileName);
-        fileNameList.add(funcFileName);
-        fileNameList.add(toolFileName);
-        fileNameList.add(candidateFileName);
-        fileNameList.add(previewFileName);
-
-        Log.d(TAG, "unique file list size " + fileNameList.size() + ", map size " + nameToTracks.size()
+        Log.d(TAG, "unique file list size " + trackFileNames.size() + ", map size " + nameToTrackId.size()
                 + ", key map size " + keyToFileName.size());
-        return fileNameList;
+        return trackFileNames;
     }
 
-    private int tryAddNameToTrack(String s, int i) {
-        if (!TextUtils.isEmpty(s) && !nameToTracks.containsKey(s)) {
-            nameToTracks.put(s, i);
-            i++;
+    private void tryAddUniqueFileName(String s) {
+        if (!TextUtils.isEmpty(s)) {
+            if (!trackFileNames.contains(s)) {
+                trackFileNames.add(s);
+            }
         }
-        return i;
     }
 
     public void checkFileExisting(ArrayList<String> fileList) {
@@ -111,7 +88,38 @@ public class SoundPackageConf {
     }
 
     public void addTrack(String fileName, int trackId) {
-        trackIds.add(trackId);
-        nameToTracks.put(fileName, trackId);
+        nameToTrackId.put(fileName, trackId);
+        Log.d(TAG, "addTrack " + fileName + " with id " + trackId + " -> map size " + nameToTrackId.size());
+    }
+
+    public void getReady() {
+        Collection<String> values = keyToFileName.values();
+        if (null != values) {
+            Iterator<String> it = values.iterator();
+            while (it.hasNext()) {
+                String s = it.next();
+                tryAddUniqueFileName(s);
+            }
+        }
+
+        tryAddUniqueFileName(defaultFileName);
+        tryAddUniqueFileName(keyFileName);
+        tryAddUniqueFileName(funcFileName);
+        tryAddUniqueFileName(toolFileName);
+        tryAddUniqueFileName(candidateFileName);
+        tryAddUniqueFileName(previewFileName);
+    }
+
+    public List<Integer> getAllTrackIds() {
+        if (null == nameToTrackId || nameToTrackId.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Integer> trackIds = new ArrayList<>();
+        for (String key : nameToTrackId.keySet()) {
+            trackIds.add(nameToTrackId.get(key));
+        }
+
+        return trackIds;
     }
 }
