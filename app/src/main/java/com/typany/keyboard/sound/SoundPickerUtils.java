@@ -5,6 +5,8 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import com.typany.utilities.INIFileWraper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +63,7 @@ public class SoundPickerUtils {
     public static SoundPackageConf loadSound(Context context, String assertFolderName) {
         String subFolder = soundFolder + File.separator + assertFolderName;
         SoundPackageConf conf = null;
+        SoundPackageConf iniConf = null;
         try {
             AssetManager am = context.getAssets();
             String[] subFileNames = am.list(subFolder);
@@ -70,9 +73,7 @@ public class SoundPickerUtils {
                     if (configJsonName.equalsIgnoreCase(name)) {
                         conf = parseJsonConfig(am, assertFolderName, name);
                     } else if (configFileName.equalsIgnoreCase(name)) {
-                        if (null == conf) {
-                            conf = parseIniConfig(am, assertFolderName, name);
-                        }
+                        iniConf = parseIniConfig(am, assertFolderName, name);
                     } else {
                         fileList.add(name);
                     }
@@ -83,7 +84,8 @@ public class SoundPickerUtils {
             e.printStackTrace();
             conf = null;
         }
-        return conf;
+
+        return null == conf ? iniConf : conf;
     }
 
     // todo: check conf item and all file name it reference to existing in fileList.
@@ -94,7 +96,48 @@ public class SoundPickerUtils {
         }
     }
 
+    /*
+[Keyboard]
+KEY_TONE_SUITE = "钢琴(半音阶)"
+KEY_TONE_NORMAL = 01-G1.ogg
+KEY_TONE_FUNCTION = 12-D3.ogg
+KEY_TONE_TOOL = zryj.ogg
+KEY_TONE_CANDIDATE = 29-G5.ogg
+     */
+    private static String getIniValue(INIFileWraper wraper, String key) {
+        return wraper.getStringProperty("Keyboard", key);
+    }
     private static SoundPackageConf parseIniConfig(AssetManager am, String folderName, String iniFileName) {
+        try {
+            InputStream inputStream = am.open(soundFolder + File.separator + folderName + File.separator + iniFileName);
+            INIFileWraper wraper = new INIFileWraper(inputStream, "UTF-8");
+            SoundPackageConf conf = new SoundPackageConf();
+            conf.folder = folderName;
+            conf.name = getIniValue(wraper, "KEY_TONE_SUITE");
+            conf.defaultFileName = getIniValue(wraper, "KEY_TONE_DEFAULT");
+            conf.keyFileName = getIniValue(wraper, "KEY_TONE_NORMAL");
+            conf.funcFileName = getIniValue(wraper, "KEY_TONE_FUNCTION");
+            conf.toolFileName = getIniValue(wraper, "KEY_TONE_TOOL");
+            conf.candidateFileName = getIniValue(wraper, "KEY_TONE_CANDIDATE");
+            conf.previewFileName = getIniValue(wraper, "Preview");
+
+            // todo: load extra key sound
+            //
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(conf.folder).append(":")
+                    .append(conf.name).append(":")
+                    .append(conf.defaultFileName).append(":")
+                    .append(conf.keyFileName).append(":")
+                    .append(conf.funcFileName).append(":")
+                    .append(conf.toolFileName).append(":")
+                    .append(conf.candidateFileName).append(":")
+                    .append(conf.previewFileName);
+            Log.d(TAG, "parseIniConfig, ini config: " + stringBuilder.toString());
+            return conf;
+        } catch(IOException e){
+            e.printStackTrace();
+        } finally{
+        }
         return null;
     }
 
