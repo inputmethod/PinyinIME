@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+
+apply plugin: 'myPlugin'
+
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.2'
