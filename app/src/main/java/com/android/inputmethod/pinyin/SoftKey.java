@@ -171,18 +171,15 @@ public class SoftKey {
     }
 
     public boolean isKeyCodeKey() {
-        if (mKeyCode > 0) return true;
-        return false;
+        return mKeyCode > 0;
     }
 
     public boolean isUserDefKey() {
-        if (mKeyCode < 0) return true;
-        return false;
+        return mKeyCode < 0;
     }
 
     public boolean isUniStrKey() {
-        if (null != mKeyLabel && mKeyCode == 0) return true;
-        return false;
+        return null != mKeyLabel && mKeyCode == 0;
     }
 
     public boolean needBalloon() {
@@ -206,13 +203,10 @@ public class SoftKey {
     }
 
     public boolean moveWithinKey(int x, int y) {
-        if (mLeft - MAX_MOVE_TOLERANCE_X <= x
+        return mLeft - MAX_MOVE_TOLERANCE_X <= x
                 && mTop - MAX_MOVE_TOLERANCE_Y <= y
                 && mRight + MAX_MOVE_TOLERANCE_X > x
-                && mBottom + MAX_MOVE_TOLERANCE_Y > y) {
-            return true;
-        }
-        return false;
+                && mBottom + MAX_MOVE_TOLERANCE_Y > y;
     }
 
     @Override

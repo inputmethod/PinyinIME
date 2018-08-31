@@ -21,13 +21,13 @@ package com.android.inputmethod.pinyin;
  * makes a direction-gesture on candidate view.
  */
 public interface CandidateViewListener {
-    public void onClickChoice(int choiceId);
+    void onClickChoice(int choiceId);
 
-    public void onToLeftGesture();
+    void onToLeftGesture();
 
-    public void onToRightGesture();
+    void onToRightGesture();
 
-    public void onToTopGesture();
+    void onToTopGesture();
 
-    public void onToBottomGesture();
+    void onToBottomGesture();
 }

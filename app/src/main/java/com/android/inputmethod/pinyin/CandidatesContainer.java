@@ -172,12 +172,12 @@ public class CandidatesContainer extends RelativeLayout implements
             BalloonHint balloonHint, GestureDetector gestureDetector) {
         mCvListener = cvListener;
 
-        mLeftArrowBtn = (ImageButton) findViewById(R.id.arrow_left_btn);
-        mRightArrowBtn = (ImageButton) findViewById(R.id.arrow_right_btn);
+        mLeftArrowBtn = findViewById(R.id.arrow_left_btn);
+        mRightArrowBtn = findViewById(R.id.arrow_right_btn);
         mLeftArrowBtn.setOnTouchListener(this);
         mRightArrowBtn.setOnTouchListener(this);
 
-        mFlipper = (ViewFlipper) findViewById(R.id.candidate_flipper);
+        mFlipper = findViewById(R.id.candidate_flipper);
         mFlipper.setMeasureAllChildren(true);
 
         invalidate();

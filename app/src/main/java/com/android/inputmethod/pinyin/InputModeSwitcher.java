@@ -662,7 +662,7 @@ public class InputModeSwitcher {
         int skbLayout = (mInputMode & MASK_SKB_LAYOUT);
         if (MASK_SKB_LAYOUT_QWERTY == skbLayout || 0 == skbLayout) {
             int language = (mInputMode & MASK_LANGUAGE);
-            if (MASK_LANGUAGE_CN == language) return true;
+            return MASK_LANGUAGE_CN == language;
         }
         return false;
     }
@@ -671,7 +671,7 @@ public class InputModeSwitcher {
         int skbLayout = (mInputMode & MASK_SKB_LAYOUT);
         if (0 == skbLayout) {
             int language = (mInputMode & MASK_LANGUAGE);
-            if (MASK_LANGUAGE_CN == language) return true;
+            return MASK_LANGUAGE_CN == language;
         }
         return false;
     }
@@ -680,18 +680,15 @@ public class InputModeSwitcher {
         int skbLayout = (mInputMode & MASK_SKB_LAYOUT);
         if (MASK_SKB_LAYOUT_QWERTY == skbLayout) {
             int language = (mInputMode & MASK_LANGUAGE);
-            if (MASK_LANGUAGE_CN == language) return true;
+            return MASK_LANGUAGE_CN == language;
         }
         return false;
     }
 
     public boolean isSymbolWithSkb() {
         int skbLayout = (mInputMode & MASK_SKB_LAYOUT);
-        if (MASK_SKB_LAYOUT_SYMBOL1 == skbLayout
-                || MASK_SKB_LAYOUT_SYMBOL2 == skbLayout) {
-            return true;
-        }
-        return false;
+        return MASK_SKB_LAYOUT_SYMBOL1 == skbLayout
+                || MASK_SKB_LAYOUT_SYMBOL2 == skbLayout;
     }
 
     public boolean isEnterNoramlState() {
