@@ -36,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.MeasureSpec;
@@ -44,8 +45,11 @@ import android.view.inputmethod.CompletionInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
+import com.animation.background.Playground;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -951,6 +955,8 @@ public class PinyinIME extends InputMethodService {
         mFloatingWindow.setContentView(mFloatingContainer);
 
         setCandidatesViewShown(true);
+
+        setBackgroundView();
         return mCandidatesContainer;
     }
 
@@ -1191,6 +1197,7 @@ public class PinyinIME extends InputMethodService {
         if (null != mSkbContainer && mSkbContainer.isShown()) {
             mSkbContainer.dismissPopups();
         }
+        hideBackgroundView();
         super.requestHideSelf(flags);
     }
 
@@ -2102,6 +2109,23 @@ public class PinyinIME extends InputMethodService {
 
         public int getFixedLen() {
             return mFixedLen;
+        }
+    }
+
+    private ViewGroup backgroundContainer;
+    private void setBackgroundView() {
+        if (null == backgroundContainer) {
+            backgroundContainer = mSkbContainer.findViewById(R.id.keyboard_background);
+            Playground surfaceView = new Playground(getApplicationContext());
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            backgroundContainer.addView(surfaceView, lp);
+        } else {
+            backgroundContainer.setVisibility(View.VISIBLE);
+        }
+    }
+    private void hideBackgroundView() {
+        if (null != backgroundContainer) {
+            backgroundContainer.setVisibility(View.GONE);
         }
     }
 }

@@ -18,6 +18,14 @@
   android:layout_width="wrap_content"
   android:layout_height="wrap_content" >
 
+    <FrameLayout
+        android:id="@+id/keyboard_background"
+        android:background="@drawable/skb_bg"
+        android:layout_alignTop="@+id/alpha_floatable"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
   <ViewFlipper
     android:id="@+id/alpha_floatable"
     android:layout_alignParentBottom="true"
