@@ -25,21 +25,15 @@
   <!-- Normal key -->
   <key_type
     id="0"
-    bg="@drawable/normal_key_bg"
-    hlbg="@drawable/normal_key_hl_bg"
     color_highlight="@color/label_color_hl0"/>
 
   <!-- Function key -->
   <key_type
-    id="1"
-    bg="@drawable/normal_key_bg"
-    hlbg="@drawable/normal_key_hl_bg"/>
+    id="1"/>
 
   <!-- Light key, light is off -->
   <key_type
-    id="2"
-    bg="@drawable/light_key_bg"
-    hlbg="@drawable/light_key_hl_bg"/>
+    id="2"/>
 
   <!-- Light key, light is on -->
   <key_type
@@ -54,8 +48,6 @@
   <!-- Key with normal background but on-key high-light-->
   <key_type
     id="5"
-    bg="@drawable/normal_key_bg"
-    hlbg="@drawable/normal_key_hl_bg"
     color_highlight="@color/label_color_hl0"/>
 
   <!-- Default icons for enter key -->

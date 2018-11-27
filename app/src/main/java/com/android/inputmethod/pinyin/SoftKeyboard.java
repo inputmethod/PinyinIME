@@ -255,8 +255,9 @@ public class SoftKeyboard {
     }
 
     public Drawable getSkbBackground() {
-        if (null != mSkbBg) return mSkbBg;
-        return mSkbTemplate.getSkbBackground();
+        return null;
+//        if (null != mSkbBg) return mSkbBg;
+//        return mSkbTemplate.getSkbBackground();
     }
 
     public Drawable getBalloonBackground() {
