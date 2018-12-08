@@ -26,6 +26,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+
+import com.android.inputmethod.opengl.Sample3_1Activity;
 import com.android.inputmethod.pinyin.Settings;
 import com.android.inputmethod.utils.ImmUtils;
 
@@ -78,6 +80,9 @@ public class SettingsActivity extends PreferenceActivity implements
         } else {
             ImmUtils.showInputmethodSetting(appContext);
         }
+
+        Intent intent = new Intent(this, Sample3_1Activity.class);
+        startActivity(intent);
     }
 
     @Override

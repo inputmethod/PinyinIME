@@ -51,5 +51,7 @@
                 </intent-filter>
             </activity>
 
+            <activity android:name="com.android.inputmethod.opengl.Sample3_1Activity" />
+
         </application>
 </manifest>
