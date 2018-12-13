@@ -42,8 +42,11 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
     @Override
     public void run() {
         while (true) {
-            obj.getNextPos();
             canvas = this.surfaceHolder.lockCanvas(); // 通过lockCanvas加锁并得到該SurfaceView的画布
+            if (null == canvas) {
+                return;
+            }
+            obj.getNextPos();
             canvas.drawColor(Color.BLACK);
             obj.drawSelf(canvas); // 把SurfaceView的画布传给物件，物件会用这个画布将自己绘制到上面的某个位置
             this.surfaceHolder.unlockCanvasAndPost(canvas); // 释放锁并提交画布进行重绘
