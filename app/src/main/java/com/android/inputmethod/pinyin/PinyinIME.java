@@ -44,8 +44,11 @@ import android.view.inputmethod.CompletionInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
+import com.android.inputmethod.gl.MySurfaceView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1089,9 +1092,11 @@ public class PinyinIME extends InputMethodService {
         if (mEnvironment.needDebug()) {
             Log.d(TAG, "onCreateInputView.");
         }
+
         LayoutInflater inflater = getLayoutInflater();
         mSkbContainer = (SkbContainer) inflater.inflate(R.layout.skb_container,
                 null);
+
         mSkbContainer.setService(this);
         mSkbContainer.setInputModeSwitcher(mInputModeSwitcher);
         mSkbContainer.setGestureDetector(mGestureDetectorSkb);
@@ -1120,6 +1125,10 @@ public class PinyinIME extends InputMethodService {
         resetToIdleState(false);
         mSkbContainer.updateInputMode();
         setCandidatesViewShown(false);
+
+        if (null != mSkbContainer) {
+            mSkbContainer.onResume();
+        }
     }
 
     @Override
@@ -1128,6 +1137,9 @@ public class PinyinIME extends InputMethodService {
             Log.d(TAG, "onFinishInputView.");
         }
         resetToIdleState(false);
+        if (null != mSkbContainer) {
+            mSkbContainer.onPause();
+        }
         super.onFinishInputView(finishingInput);
     }
 

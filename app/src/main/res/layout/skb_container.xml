@@ -14,23 +14,36 @@
      limitations under the License.
 -->
 <com.android.inputmethod.pinyin.SkbContainer xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content" >
-
-  <ViewFlipper
-    android:id="@+id/alpha_floatable"
-    android:layout_alignParentBottom="true"
+    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
-   <com.android.inputmethod.pinyin.SoftKeyboardView
-     android:id="@+id/alpha_view1"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"/>
-   <com.android.inputmethod.pinyin.SoftKeyboardView
-     android:id="@+id/alpha_view2"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"/>
-  </ViewFlipper>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/skb_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@id/alpha_floatable"
+        >
+        <com.android.inputmethod.gl.MySurfaceView
+            android:id="@+id/surface_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <ViewFlipper
+        android:id="@+id/alpha_floatable"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <com.android.inputmethod.pinyin.SoftKeyboardView
+            android:id="@+id/alpha_view1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <com.android.inputmethod.pinyin.SoftKeyboardView
+            android:id="@+id/alpha_view2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </ViewFlipper>
 </com.android.inputmethod.pinyin.SkbContainer>

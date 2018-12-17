@@ -7,7 +7,7 @@ android {
         noCompress 'dat'
     }
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 18
         targetSdkVersion 28
         applicationId "com.android.inputmethod.pinyin"
 

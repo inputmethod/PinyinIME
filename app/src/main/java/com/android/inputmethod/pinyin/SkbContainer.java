@@ -27,9 +27,12 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
+
+import com.android.inputmethod.gl.MySurfaceView;
 
 import java.lang.reflect.Method;
 
@@ -179,6 +182,8 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
      */
     private int mXyPosTmp[] = new int[2];
 
+    private MySurfaceView mySurfaceView;
+
     public SkbContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -270,6 +275,10 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         if (null == mSkbFlipper) {
             mSkbFlipper = findViewById(R.id.alpha_floatable);
         }
+        if (null == mySurfaceView) {
+            mySurfaceView = findViewById(R.id.surface_view);
+        }
+
         mMajorView = (SoftKeyboardView) mSkbFlipper.getChildAt(0);
 
         SoftKeyboard majorSkb = null;
@@ -351,7 +360,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
 
             if (null == mPopupSkbView) {
                 mPopupSkbView = new SoftKeyboardView(getContext(), null);
-                mPopupSkbView.onMeasure(LayoutParams.WRAP_CONTENT,
+                mPopupSkbView.measure(LayoutParams.WRAP_CONTENT,
                         LayoutParams.WRAP_CONTENT);
             }
             mPopupSkbView.setOnTouchListener(this);
@@ -550,6 +559,18 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
                         .getEdgeFlags());
         boolean ret = onTouchEvent(newEv);
         return ret;
+    }
+
+    public void onPause() {
+        if (null != mySurfaceView) {
+            mySurfaceView.onPause();
+        }
+    }
+
+    public void onResume() {
+        if (null != mySurfaceView) {
+            mySurfaceView.onResume();
+        }
     }
 
     class LongPressTimer extends Handler implements Runnable {
