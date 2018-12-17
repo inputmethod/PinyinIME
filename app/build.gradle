@@ -16,6 +16,12 @@ android {
                 cppFlags "-Wall"
             }
         }
+
+        ndk {
+            abiFilters "armeabi-v7a"
+            abiFilters "x86"
+            abiFilters "armeabi"
+        }
     }
 
     buildTypes {
