@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -23,7 +24,12 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
     private Sprite obj;
 
     public Playground(Context c) {
-        super(c);
+        this(c, null);
+    }
+
+    public Playground(Context c, AttributeSet attrs) {
+        super(c, attrs);
+
         this.surfaceHolder = this.getHolder();
         this.surfaceHolder.addCallback(this);
         Bitmap img = BitmapFactory.decodeResource(c.getResources(), R.drawable.app_icon);

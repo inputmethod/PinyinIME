@@ -1197,7 +1197,7 @@ public class PinyinIME extends InputMethodService {
         if (null != mSkbContainer && mSkbContainer.isShown()) {
             mSkbContainer.dismissPopups();
         }
-        hideBackgroundView();
+
         super.requestHideSelf(flags);
     }
 
@@ -2112,20 +2112,8 @@ public class PinyinIME extends InputMethodService {
         }
     }
 
-    private ViewGroup backgroundContainer;
+    private Playground surfaceView;
     private void setBackgroundView() {
-        if (null == backgroundContainer) {
-            backgroundContainer = mSkbContainer.findViewById(R.id.keyboard_background);
-            Playground surfaceView = new Playground(getApplicationContext());
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-            backgroundContainer.addView(surfaceView, lp);
-        } else {
-            backgroundContainer.setVisibility(View.VISIBLE);
-        }
-    }
-    private void hideBackgroundView() {
-        if (null != backgroundContainer) {
-            backgroundContainer.setVisibility(View.GONE);
-        }
+        surfaceView = mSkbContainer.findViewById(R.id.keyboard_background);
     }
 }
