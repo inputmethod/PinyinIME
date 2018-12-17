@@ -52,37 +52,37 @@ public class MySurfaceView extends GLSurfaceView {
     }
 
     //´¥ÃþÊÂ¼þ»Øµ÷·½·¨
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        float x = e.getX();
-        float y = e.getY();
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                //´¥¿ØºáÏòÎ»ÒÆÌ«ÑôÈÆyÖáÐý×ª
-                float dx = x - mPreviousX;//¼ÆËã´¥¿Ø±ÊXÎ»ÒÆ
-                yAngle += dx * TOUCH_SCALE_FACTOR;//½«XÎ»ÒÆÕÛËã³É½Ç¶È
-                float sunx = (float) (Math.cos(Math.toRadians(yAngle)) * 100);
-                float sunz = -(float) (Math.sin(Math.toRadians(yAngle)) * 100);
-                MatrixState.setLightLocationSun(sunx, 5, sunz);
-
-                //´¥¿Ø×ÝÏòÎ»ÒÆÉãÏñ»úÈÆxÖáÐý×ª -90¡«+90
-                float dy = y - mPreviousY;//¼ÆËã´¥¿Ø±ÊYÎ»ÒÆ
-                xAngle += dy * TOUCH_SCALE_FACTOR;    //½«YÎ»ÒÆÕÛËã³ÉÈÆXÖáÐý×ªµÄ½Ç¶È
-                if (xAngle > 90) {
-                    xAngle = 90;
-                } else if (xAngle < -90) {
-                    xAngle = -90;
-                }
-                float cy = (float) (7.2 * Math.sin(Math.toRadians(xAngle)));
-                float cz = (float) (7.2 * Math.cos(Math.toRadians(xAngle)));
-                float upy = (float) Math.cos(Math.toRadians(xAngle));
-                float upz = -(float) Math.sin(Math.toRadians(xAngle));
-                MatrixState.setCamera(0, cy, cz, 0, 0, 0, 0, upy, upz);
-        }
-        mPreviousX = x;//¼ÇÂ¼´¥¿Ø±ÊÎ»ÖÃ
-        mPreviousY = y;
-        return true;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent e) {
+//        float x = e.getX();
+//        float y = e.getY();
+//        switch (e.getAction()) {
+//            case MotionEvent.ACTION_MOVE:
+//                //´¥¿ØºáÏòÎ»ÒÆÌ«ÑôÈÆyÖáÐý×ª
+//                float dx = x - mPreviousX;//¼ÆËã´¥¿Ø±ÊXÎ»ÒÆ
+//                yAngle += dx * TOUCH_SCALE_FACTOR;//½«XÎ»ÒÆÕÛËã³É½Ç¶È
+//                float sunx = (float) (Math.cos(Math.toRadians(yAngle)) * 100);
+//                float sunz = -(float) (Math.sin(Math.toRadians(yAngle)) * 100);
+//                MatrixState.setLightLocationSun(sunx, 5, sunz);
+//
+//                //´¥¿Ø×ÝÏòÎ»ÒÆÉãÏñ»úÈÆxÖáÐý×ª -90¡«+90
+//                float dy = y - mPreviousY;//¼ÆËã´¥¿Ø±ÊYÎ»ÒÆ
+//                xAngle += dy * TOUCH_SCALE_FACTOR;    //½«YÎ»ÒÆÕÛËã³ÉÈÆXÖáÐý×ªµÄ½Ç¶È
+//                if (xAngle > 90) {
+//                    xAngle = 90;
+//                } else if (xAngle < -90) {
+//                    xAngle = -90;
+//                }
+//                float cy = (float) (7.2 * Math.sin(Math.toRadians(xAngle)));
+//                float cz = (float) (7.2 * Math.cos(Math.toRadians(xAngle)));
+//                float upy = (float) Math.cos(Math.toRadians(xAngle));
+//                float upz = -(float) Math.sin(Math.toRadians(xAngle));
+//                MatrixState.setCamera(0, cy, cz, 0, 0, 0, 0, upy, upz);
+//        }
+//        mPreviousX = x;//¼ÇÂ¼´¥¿Ø±ÊÎ»ÖÃ
+//        mPreviousY = y;
+//        return true;
+//    }
 
     private class SceneRenderer implements GLSurfaceView.Renderer {
         Earth earth;//µØÇò
