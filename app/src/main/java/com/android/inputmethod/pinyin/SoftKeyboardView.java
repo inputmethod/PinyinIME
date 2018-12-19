@@ -27,6 +27,7 @@ import android.util.AttributeSet;
 
 import com.android.inputmethod.opengl.MyTDView;
 import com.android.inputmethod.pinyin.SoftKeyboard.KeyRow;
+import com.animation.background.Playground;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ import java.util.List;
  * correction, need a global strategy to map an event into a proper view to
  * achieve better user experience.
  */
-public class SoftKeyboardView extends MyTDView {
+public class SoftKeyboardView extends Playground {
     /**
      * The definition of the soft keyboard for the current this soft keyboard
      * view.

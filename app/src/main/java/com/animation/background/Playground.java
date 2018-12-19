@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -20,20 +21,25 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    private Sprite obj;
+    private Sprite flyingIcon;
 
     public Playground(Context c) {
-        super(c);
+        super(c, null);
+    }
+
+    public Playground(Context c, AttributeSet attrs) {
+        super(c, attrs);
+
         this.surfaceHolder = this.getHolder();
         this.surfaceHolder.addCallback(this);
         Bitmap img = BitmapFactory.decodeResource(c.getResources(), R.drawable.app_icon);
-        this.obj = new Sprite(img);
+        this.flyingIcon = new Sprite(img);
     }
 
     @Override
     public void onVisibilityChanged(View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        if (changedView == this && visibility == GONE) {
+        if (null != thread && changedView == this && visibility == GONE) {
             Toast.makeText(getContext(), "SurfaceView已经隐藏", Toast.LENGTH_LONG).show();
             thread.interrupt();
         }
@@ -42,10 +48,17 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
     @Override
     public void run() {
         while (true) {
-            obj.getNextPos();
+            flyingIcon.getNextPos();
             canvas = this.surfaceHolder.lockCanvas(); // 通过lockCanvas加锁并得到該SurfaceView的画布
+            if (null == canvas) {
+                return;
+            }
+
             canvas.drawColor(Color.BLACK);
-            obj.drawSelf(canvas); // 把SurfaceView的画布传给物件，物件会用这个画布将自己绘制到上面的某个位置
+            flyingIcon.drawSelf(canvas); // 把SurfaceView的画布传给物件，物件会用这个画布将自己绘制到上面的某个位置
+
+            onDraw(canvas);
+
             this.surfaceHolder.unlockCanvasAndPost(canvas); // 释放锁并提交画布进行重绘
             try {
                 Thread.sleep(10); // 这个就相当于帧频了，数值越小画面就越流畅
@@ -70,6 +83,6 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
     @Override
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
         // 这里是SurfaceView发生变化的时候触发的部分
-        obj.setBound(arg2, arg3);
+        flyingIcon.setBound(arg2, arg3);
     }
 }
