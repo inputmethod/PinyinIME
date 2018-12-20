@@ -77,8 +77,9 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                               int height) {
         // 这里是SurfaceView发生变化的时候触发的部分
-        obj.setBound(arg2, arg3);
+        obj.setBound(width, height);
     }
 }
