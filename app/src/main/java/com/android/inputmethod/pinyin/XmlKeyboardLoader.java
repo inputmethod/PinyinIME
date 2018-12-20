@@ -352,7 +352,7 @@ public class XmlKeyboardLoader {
                                 || null == popupBg) {
                             return null;
                         }
-                        mSkbTemplate.setBackgrounds(skbBg, balloonBg, popupBg);
+                        mSkbTemplate.setBackgrounds(null, balloonBg, popupBg);
 
                         float xMargin = getFloat(xrp, XMLATTR_KEY_XMARGIN, 0);
                         float yMargin = getFloat(xrp, XMLATTR_KEY_YMARGIN, 0);

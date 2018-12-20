@@ -1,5 +1,6 @@
 package com.animation.background;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,10 +22,10 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    private Sprite obj;
+    private Sprite flyingIcon;
 
     public Playground(Context c) {
-        this(c, null);
+        super(c, null);
     }
 
     public Playground(Context c, AttributeSet attrs) {
@@ -33,18 +34,19 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
         this.surfaceHolder = this.getHolder();
         this.surfaceHolder.addCallback(this);
         Bitmap img = BitmapFactory.decodeResource(c.getResources(), R.drawable.app_icon);
-        this.obj = new Sprite(img);
+        this.flyingIcon = new Sprite(img);
     }
 
     @Override
     public void onVisibilityChanged(View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        if (changedView == this && visibility == GONE) {
+        if (null != thread && changedView == this && visibility == GONE) {
             Toast.makeText(getContext(), "SurfaceView已经隐藏", Toast.LENGTH_LONG).show();
             thread.interrupt();
         }
     }
 
+    @SuppressLint("WrongCall")
     @Override
     public void run() {
         while (true) {
@@ -52,9 +54,14 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
             if (null == canvas) {
                 return;
             }
-            obj.getNextPos();
+
+            flyingIcon.getNextPos();
+
             canvas.drawColor(Color.BLACK);
-            obj.drawSelf(canvas); // 把SurfaceView的画布传给物件，物件会用这个画布将自己绘制到上面的某个位置
+            flyingIcon.drawSelf(canvas); // 把SurfaceView的画布传给物件，物件会用这个画布将自己绘制到上面的某个位置
+
+            onDraw(canvas);
+
             this.surfaceHolder.unlockCanvasAndPost(canvas); // 释放锁并提交画布进行重绘
             try {
                 Thread.sleep(10); // 这个就相当于帧频了，数值越小画面就越流畅
@@ -80,6 +87,6 @@ public class Playground extends SurfaceView implements SurfaceHolder.Callback, R
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                int height) {
         // 这里是SurfaceView发生变化的时候触发的部分
-        obj.setBound(width, height);
+        flyingIcon.setBound(width, height);
     }
 }

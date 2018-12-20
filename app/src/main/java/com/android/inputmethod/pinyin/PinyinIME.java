@@ -36,7 +36,6 @@ import android.view.LayoutInflater;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.MeasureSpec;
@@ -956,7 +955,7 @@ public class PinyinIME extends InputMethodService {
 
         setCandidatesViewShown(true);
 
-        setBackgroundView();
+//        setBackgroundView();
         return mCandidatesContainer;
     }
 
@@ -1198,6 +1197,7 @@ public class PinyinIME extends InputMethodService {
             mSkbContainer.dismissPopups();
         }
 
+//        hideBackgroundView();
         super.requestHideSelf(flags);
     }
 
@@ -2110,10 +2110,5 @@ public class PinyinIME extends InputMethodService {
         public int getFixedLen() {
             return mFixedLen;
         }
-    }
-
-    private Playground surfaceView;
-    private void setBackgroundView() {
-        surfaceView = mSkbContainer.findViewById(R.id.keyboard_background);
     }
 }
