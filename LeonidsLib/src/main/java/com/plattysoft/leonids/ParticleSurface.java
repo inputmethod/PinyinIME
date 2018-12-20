@@ -1,0 +1,663 @@
+package com.plattysoft.leonids;
+
+import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+
+import com.plattysoft.leonids.initializers.AlphaInitializer;
+import com.plattysoft.leonids.initializers.ParticleInitializer;
+import com.plattysoft.leonids.initializers.SpeedModuleAndRangeInitializer;
+import com.plattysoft.leonids.modifiers.ParticleModifier;
+import com.plattysoft.leonids.surface.ParticlesBridgeView;
+
+public class ParticleSurface {
+//    private static long TIMER_TASK_INTERVAL = 33; // Default 30fps
+//
+//    private Playground mDrawingView;
+//
+//    private long mTimeToLive;
+//    private long mCurrentTime = 0;
+//
+//    private ValueAnimator mAnimator;
+//    private Timer mTimer;
+//    private final ParticleTimerTask mTimerTask = new ParticleTimerTask(this);
+//
+//    private float mDpToPxScale;
+//    private int[] mParentLocation;
+//
+//    private static class ParticleTimerTask extends TimerTask {
+//
+//        private final WeakReference<ParticleSurface> mPs;
+//
+//        public ParticleTimerTask(ParticleSurface ps) {
+//            mPs = new WeakReference<>(ps);
+//        }
+//
+//        @Override
+//        public void run() {
+//            if (mPs.get() != null) {
+//                ParticleSurface ps = mPs.get();
+//                ps.onUpdate(ps.mCurrentTime);
+//                ps.mCurrentTime += TIMER_TASK_INTERVAL;
+//            }
+//        }
+//    }
+//
+//    private ParticleSurface(Playground parentView, int maxParticles, long timeToLive) {
+//        model = new ParticleModel(maxParticles);
+//
+//        mParentLocation = new int[2];
+//        setParentViewGroup(parentView);
+//
+//        // Create the particles
+//        mTimeToLive = timeToLive;
+//
+//        DisplayMetrics displayMetrics = parentView.getContext().getResources().getDisplayMetrics();
+//        mDpToPxScale = (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT);
+//    }
+//
+//    /**
+//     * Creates a particle system with the given parameters
+//     *
+//     * @param parentView   The parent view group
+//     * @param drawable     The drawable to use as a particle
+//     * @param maxParticles The maximum number of particles
+//     * @param timeToLive   The time to live for the particles
+//     */
+//    public ParticleSurface(Playground parentView, int maxParticles, Drawable drawable, long timeToLive) {
+//        this(parentView, maxParticles, timeToLive);
+//        model.initParticle(drawable);
+//    }
+//
+//    public float dpToPx(float dp) {
+//        return dp * mDpToPxScale;
+//    }
+//
+//    /**
+//     * Sets the frames per second of <em>ALL</em> ParticleSystems
+//     *
+//     * @param fps the desired frames per second
+//     */
+//    public static void setFPS(double fps) {
+//        TIMER_TASK_INTERVAL = Math.round(1000 / fps);
+//    }
+//
+//    /**
+//     * Adds a modifier to the Particle system, it will be executed on each update.
+//     *
+//     * @param modifier modifier to be added to the ParticleSystem
+//     */
+//    public ParticleSurface addModifier(ParticleModifier modifier) {
+//        model.add(modifier);
+//        return this;
+//    }
+//
+//    public ParticleSurface setSpeedRange(float speedMin, float speedMax) {
+//        addInitializer(new SpeedModuleAndRangeInitializer(dpToPx(speedMin), dpToPx(speedMax), 0, 360));
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the speed range and angle range of emitted particles. Angles are in degrees
+//     * and non negative:
+//     * 0 meaning to the right, 90 to the bottom,... in clockwise orientation. Speed is non
+//     * negative and is described in pixels per millisecond.
+//     *
+//     * @param speedMin The minimum speed to emit particles.
+//     * @param speedMax The maximum speed to emit particles.
+//     * @param minAngle The minimum angle to emit particles in degrees.
+//     * @param maxAngle The maximum angle to emit particles in degrees.
+//     * @return This.
+//     */
+//    public ParticleSurface setSpeedModuleAndAngleRange(float speedMin, float speedMax, int minAngle, int maxAngle) {
+//        // else emitting from top (270°) to bottom (90°) range would not be possible if someone
+//        // entered minAngle = 270 and maxAngle=90 since the module would swap the values
+//        while (maxAngle < minAngle) {
+//            maxAngle += 360;
+//        }
+//        addInitializer(new SpeedModuleAndRangeInitializer(dpToPx(speedMin), dpToPx(speedMax), minAngle, maxAngle));
+//        return this;
+//    }
+//
+//    public ParticleSurface setSpeedModuleAndAngleRange(float acceleration, float speed, int[] angleArray) {
+//        addInitializer(new SpeedModuleArrayInitializer(acceleration, acceleration, dpToPx(speed), dpToPx(speed), angleArray));
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the speed components ranges that particles will be emitted. Speeds are
+//     * measured in density pixels per millisecond.
+//     *
+//     * @param speedMinX The minimum speed in x direction.
+//     * @param speedMaxX The maximum speed in x direction.
+//     * @param speedMinY The minimum speed in y direction.
+//     * @param speedMaxY The maximum speed in y direction.
+//     * @return This.
+//     */
+//    public ParticleSurface setSpeedByComponentsRange(float speedMinX, float speedMaxX, float speedMinY, float speedMaxY) {
+//        addInitializer(new SpeeddByComponentsInitializer(dpToPx(speedMinX), dpToPx(speedMaxX),
+//                dpToPx(speedMinY), dpToPx(speedMaxY)));
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the initial rotation range of emitted particles. The rotation angle is
+//     * measured in degrees with 0° being no rotation at all and 90° tilting the image to the right.
+//     *
+//     * @param minAngle The minimum tilt angle.
+//     * @param maxAngle The maximum tilt angle.
+//     * @return This.
+//     */
+//    public ParticleSurface setInitialRotationRange(int minAngle, int maxAngle) {
+//        addInitializer(new RotationInitializer(minAngle, maxAngle));
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the scale range of emitted particles. Will scale the images around their
+//     * center multiplied with the given scaling factor.
+//     *
+//     * @param minScale The minimum scaling factor
+//     * @param maxScale The maximum scaling factor.
+//     * @return This.
+//     */
+//    public ParticleSurface setScaleRange(float minScale, float maxScale) {
+//        addInitializer(new ScaleInitializer(minScale, maxScale));
+//        return this;
+//    }
+//
+//    public ParticleSurface setAlphaRange(int minAlpha, int maxAlpha) {
+//        addInitializer(new AlphaInitializer(minAlpha, maxAlpha));
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the rotation speed of emitted particles. Rotation speed is measured in degrees
+//     * per second.
+//     *
+//     * @param rotationSpeed The rotation speed.
+//     * @return This.
+//     */
+//    public ParticleSurface setRotationSpeed(float rotationSpeed) {
+//        addInitializer(new RotationSpeedInitializer(rotationSpeed, rotationSpeed));
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the rotation speed range for emitted particles. The rotation speed is measured
+//     * in degrees per second and can be positive or negative.
+//     *
+//     * @param minRotationSpeed The minimum rotation speed.
+//     * @param maxRotationSpeed The maximum rotation speed.
+//     * @return This.
+//     */
+//    public ParticleSurface setRotationSpeedRange(float minRotationSpeed, float maxRotationSpeed) {
+//        addInitializer(new RotationSpeedInitializer(minRotationSpeed, maxRotationSpeed));
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the acceleration range and angle range of emitted particles. The acceleration
+//     * components in x and y direction are controlled by the acceleration angle. The acceleration
+//     * is measured in density pixels per square millisecond. The angle is measured in degrees
+//     * with 0° pointing to the right and going clockwise.
+//     *
+//     * @param minAcceleration
+//     * @param maxAcceleration
+//     * @param minAngle
+//     * @param maxAngle
+//     * @return
+//     */
+//    public ParticleSurface setAccelerationModuleAndAndAngleRange(float minAcceleration, float maxAcceleration, int minAngle, int maxAngle) {
+//        addInitializer(new AccelerationInitializer(dpToPx(minAcceleration), dpToPx(maxAcceleration),
+//                minAngle, maxAngle));
+//        return this;
+//    }
+//
+//    /**
+//     * Adds a custom initializer for emitted particles. The most common use case is the ability to
+//     * update the initializer in real-time instead of adding new ones ontop of the existing one.
+//     *
+//     * @param initializer The non-null initializer to add.
+//     * @return This.
+//     */
+//    public ParticleSurface addInitializer(ParticleInitializer initializer) {
+//        if (initializer != null) {
+//            model.add(initializer);
+//        }
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the acceleration for emitted particles with the given angle. Acceleration is
+//     * measured in pixels per square millisecond. The angle is measured in degrees with 0°
+//     * meaning to the right and orientation being clockwise. The angle controls the acceleration
+//     * direction.
+//     *
+//     * @param acceleration The acceleration.
+//     * @param angle        The acceleration direction.
+//     * @return This.
+//     */
+//    public ParticleSurface setAcceleration(float acceleration, int angle) {
+//        addInitializer(new AccelerationInitializer(acceleration, acceleration, angle, angle));
+//        return this;
+//    }
+//
+//    /**
+//     * Initializes the parent view group. This needs to be done before any other configuration or
+//     * emitting is done. Drawing will be done to a child that is added to this view. So this view
+//     * needs to allow displaying an arbitrary sized view on top of its other content.
+//     *
+//     * @param viewGroup The view group to use.
+//     * @return This.
+//     */
+//    public ParticleSurface setParentViewGroup(Playground viewGroup) {
+//        mDrawingView = viewGroup;
+//        if (mDrawingView != null) {
+//            mDrawingView.getLocationInWindow(mParentLocation);
+//        }
+//        return this;
+//    }
+//
+//    public ParticleSurface setStartTime(long time) {
+//        mCurrentTime = time;
+//        return this;
+//    }
+//
+//    /**
+//     * Configures a fade out for the particles when they disappear
+//     *
+//     * @param milisecondsBeforeEnd fade out duration in milliseconds
+//     * @param interpolator         the interpolator for the fade out (default is linear)
+//     */
+//    public ParticleSurface setFadeOut(long milisecondsBeforeEnd, Interpolator interpolator) {
+//        model.add(new AlphaModifier(255, 0, mTimeToLive - milisecondsBeforeEnd, mTimeToLive, interpolator));
+//        return this;
+//    }
+//
+//    /**
+//     * Configures a fade out for the particles when they disappear
+//     *
+//     * @param duration fade out duration in milliseconds
+//     */
+//    public ParticleSurface setFadeOut(long duration) {
+//        return setFadeOut(duration, new LinearInterpolator());
+//    }
+//
+//    /**
+//     * Starts emitting particles from a specific view. If at some point the number goes over the amount of particles availabe on create
+//     * no new particles will be created
+//     *
+//     * @param emitter            View from which center the particles will be emited
+//     * @param gravity            Which position among the view the emission takes place
+//     * @param particlesPerSecond Number of particles per second that will be emited (evenly distributed)
+//     * @param emittingTime       time the emitter will be emitting particles
+//     */
+//    public void emitWithGravity(View emitter, int gravity, int particlesPerSecond, int emittingTime) {
+//        // Setup emitter
+//        configureEmitter(emitter, gravity);
+//        startEmitting(particlesPerSecond, emittingTime);
+//    }
+//
+//    /**
+//     * Starts emitting particles from a specific view. If at some point the number goes over the amount of particles availabe on create
+//     * no new particles will be created
+//     *
+//     * @param emitter            View from which center the particles will be emited
+//     * @param particlesPerSecond Number of particles per second that will be emited (evenly distributed)
+//     * @param emittingTime       time the emitter will be emitting particles
+//     */
+//    public void emit(View emitter, int particlesPerSecond, int emittingTime) {
+//        emitWithGravity(emitter, Gravity.CENTER, particlesPerSecond, emittingTime);
+//    }
+//
+//    /**
+//     * Starts emitting particles from a specific view. If at some point the number goes over the amount of particles availabe on create
+//     * no new particles will be created
+//     *
+//     * @param emitter            View from which center the particles will be emited
+//     * @param particlesPerSecond Number of particles per second that will be emited (evenly distributed)
+//     */
+//    public void emit(View emitter, int particlesPerSecond) {
+//        // Setup emitter
+//        emitWithGravity(emitter, Gravity.CENTER, particlesPerSecond);
+//    }
+//
+//    /**
+//     * Starts emitting particles from a specific view. If at some point the number goes over the amount of particles availabe on create
+//     * no new particles will be created
+//     *
+//     * @param emitter            View from which center the particles will be emited
+//     * @param gravity            Which position among the view the emission takes place
+//     * @param particlesPerSecond Number of particles per second that will be emited (evenly distributed)
+//     */
+//    public void emitWithGravity(View emitter, int gravity, int particlesPerSecond) {
+//        // Setup emitter
+////		configureEmitter(emitter, gravity);
+//
+//        int[] location = new int[2];
+//        emitter.getLocationInWindow(location);
+//        int width = emitter.getWidth();
+//        int height = emitter.getHeight();
+//        emitWithGravity(location, width, height, gravity, particlesPerSecond);
+//    }
+//
+//    public void emitWithGravity(int[] location, int width, int height, int gravity, int particlesPerSecond) {
+//        model.configureEmitter(mParentLocation, location, width, height, gravity);
+//        startEmitting(particlesPerSecond);
+//    }
+//
+//    private void startEmitting(int particlesPerSecond) {
+//        initDrawingField();
+//        model.startEmitting(particlesPerSecond, -1);
+//        updateParticlesBeforeStartTime(particlesPerSecond);
+//        mTimer = new Timer();
+//        mTimer.schedule(mTimerTask, 0, TIMER_TASK_INTERVAL);
+//    }
+//
+//    public void emit(int emitterX, int emitterY, int particlesPerSecond, int emittingTime) {
+//        model.configureEmitter(mParentLocation, emitterX, emitterY);
+//        startEmitting(particlesPerSecond, emittingTime);
+//    }
+//
+//    private void startEmitting(int particlesPerSecond, int emittingTime) {
+//        initDrawingField();
+//        model.startEmitting(particlesPerSecond, emittingTime);
+//        updateParticlesBeforeStartTime(particlesPerSecond);
+//        startAnimator(new LinearInterpolator(), emittingTime + mTimeToLive);
+//    }
+//
+//    public void emit(int emitterX, int emitterY, int particlesPerSecond) {
+//        model.configureEmitter(mParentLocation, emitterX, emitterY);
+//        startEmitting(particlesPerSecond);
+//    }
+//
+//    public void updateEmitPoint(int emitterX, int emitterY) {
+//        model.configureEmitter(mParentLocation, emitterX, emitterY);
+//    }
+//
+//    public void updateEmitPoint(View emitter, int gravity) {
+//        configureEmitter(emitter, gravity);
+//    }
+//
+//    /**
+//     * Launches particles in one Shot
+//     *
+//     * @param emitter      View from which center the particles will be emited
+//     * @param numParticles number of particles launched on the one shot
+//     */
+//    public void oneShot(View emitter, int numParticles) {
+//        int[] location = new int[2];
+//        emitter.getLocationInWindow(location);
+//        int width = emitter.getWidth();
+//        int height = emitter.getHeight();
+//        oneShot(location, width, height, numParticles, new LinearInterpolator());
+//    }
+//
+//    /**
+//     * Launches particles in one Shot using a special Interpolator
+//     *
+//     * @param location     The left-top corner of View from which center the particles will be emited
+//     * @param width        The width of View from which center the particles will be emited
+//     * @param height       The height View from which center the particles will be emited
+//     * @param numParticles number of particles launched on the one shot
+//     * @param interpolator the interpolator for the time
+//     */
+//    public void oneShot(int[] location, int width, int height, int numParticles,
+//                        Interpolator interpolator) {
+//        model.configureEmitter(mParentLocation, location, width, height, Gravity.CENTER);
+//        model.setEmittingTime(mTimeToLive);
+//        model.onShot(mTimeToLive, numParticles);
+//
+//        initDrawingField();
+//        // We start a property animator that will call us to do the update
+//        // Animate from 0 to timeToLiveMax
+//        startAnimator(interpolator, mTimeToLive);
+//    }
+//
+//    private void startAnimator(Interpolator interpolator, long animnationTime) {
+//        mAnimator = ValueAnimator.ofInt(0, (int) animnationTime);
+//        mAnimator.setDuration(animnationTime);
+//        mAnimator.addUpdateListener(new AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                int miliseconds = (Integer) animation.getAnimatedValue();
+//                onUpdate(miliseconds);
+//            }
+//        });
+//        mAnimator.addListener(new AnimatorListener() {
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                cleanupAnimation();
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation) {
+//                cleanupAnimation();
+//            }
+//        });
+//        mAnimator.setInterpolator(interpolator);
+//        mAnimator.start();
+//    }
+//
+//    private void configureEmitter(View emitter, int gravity) {
+//        // It works with an emision range
+//        int[] location = new int[2];
+//        emitter.getLocationInWindow(location);
+//        int width = emitter.getWidth();
+//        int height = emitter.getHeight();
+//        model.configureEmitter(mParentLocation, location, width, height, gravity);
+//    }
+//
+//    private void onUpdate(long miliseconds) {
+//        model.onUpdate(mTimeToLive, miliseconds);
+//
+//        if (null != mDrawingView) {
+//            mDrawingView.postInvalidate();
+//        }
+//    }
+//
+//    private void cleanupAnimation() {
+//        mDrawingView = null;
+//        model.cleanupAnimation();
+//    }
+//
+//    /**
+//     * Stops emitting new particles, but will draw the existing ones until their timeToLive expire
+//     * For an cancellation and stop drawing of the particles, use cancel instead.
+//     */
+//    public void stopEmitting() {
+//        // The time to be emitting is the current time (as if it was a time-limited emitter
+//        model.setEmittingTime(mCurrentTime);
+//    }
+//
+//    /**
+//     * Cancels the particle system and all the animations.
+//     * To stop emitting but animate until the end, use stopEmitting instead.
+//     */
+//    public void cancel() {
+//        if (mAnimator != null && mAnimator.isRunning()) {
+//            mAnimator.cancel();
+//        }
+//        if (mTimer != null) {
+//            mTimer.cancel();
+//            mTimer.purge();
+//            cleanupAnimation();
+//        }
+//    }
+//
+//    private void updateParticlesBeforeStartTime(int particlesPerSecond) {
+//        if (particlesPerSecond == 0) {
+//            return;
+//        }
+//        long currentTimeInMs = mCurrentTime / 1000;
+//        long framesCount = currentTimeInMs / particlesPerSecond;
+//        if (framesCount == 0) {
+//            return;
+//        }
+//        long frameTimeInMs = mCurrentTime / framesCount;
+//        for (int i = 1; i <= framesCount; i++) {
+//            onUpdate(frameTimeInMs * i + 1);
+//        }
+//    }
+//
+//
+//    private ParticleModel model;
+//    private void initDrawingField() {
+//        // Add a full size view to the parent view
+//        mDrawingView.setModel(model);
+//    }
+
+    private static long TIMER_TASK_INTERVAL = 33; // Default 30fps
+
+    private ParticlesBridgeView mDrawingView;
+
+    private long mTimeToLive;
+
+    private float mDpToPxScale;
+    private int[] mParentLocation;
+
+    private ParticleSurface(ParticlesBridgeView parentView, int maxParticles, long timeToLive) {
+        model = new ParticleModel(maxParticles);
+
+        mParentLocation = new int[2];
+        setParentViewGroup(parentView);
+
+        // Create the particles
+        mTimeToLive = timeToLive;
+
+        DisplayMetrics displayMetrics = parentView.getContext().getResources().getDisplayMetrics();
+        mDpToPxScale = (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    /**
+     * Initializes the parent view group. This needs to be done before any other configuration or
+     * emitting is done. Drawing will be done to a child that is added to this view. So this view
+     * needs to allow displaying an arbitrary sized view on top of its other content.
+     *
+     * @param viewGroup The view group to use.
+     * @return This.
+     */
+    public ParticleSurface setParentViewGroup(ParticlesBridgeView viewGroup) {
+        mDrawingView = viewGroup;
+        if (mDrawingView != null) {
+            mDrawingView.getLocationInWindow(mParentLocation);
+        }
+        return this;
+    }
+
+    /**
+     * Creates a particle system with the given parameters
+     *
+     * @param parentView   The parent view group
+     * @param drawable     The drawable to use as a particle
+     * @param maxParticles The maximum number of particles
+     * @param timeToLive   The time to live for the particles
+     */
+    public ParticleSurface(ParticlesBridgeView parentView, int maxParticles, Drawable drawable, long timeToLive) {
+        this(parentView, maxParticles, timeToLive);
+        model.initParticle(drawable);
+    }
+
+    /**
+     * Initializes the speed range and angle range of emitted particles. Angles are in degrees
+     * and non negative:
+     * 0 meaning to the right, 90 to the bottom,... in clockwise orientation. Speed is non
+     * negative and is described in pixels per millisecond.
+     *
+     * @param speedMin The minimum speed to emit particles.
+     * @param speedMax The maximum speed to emit particles.
+     * @param minAngle The minimum angle to emit particles in degrees.
+     * @param maxAngle The maximum angle to emit particles in degrees.
+     * @return This.
+     */
+    public ParticleSurface setSpeedModuleAndAngleRange(float speedMin, float speedMax, int minAngle, int maxAngle) {
+        // else emitting from top (270°) to bottom (90°) range would not be possible if someone
+        // entered minAngle = 270 and maxAngle=90 since the module would swap the values
+        while (maxAngle < minAngle) {
+            maxAngle += 360;
+        }
+        addInitializer(new SpeedModuleAndRangeInitializer(dpToPx(speedMin), dpToPx(speedMax), minAngle, maxAngle));
+        return this;
+    }
+
+    public ParticleSurface setAlphaRange(int minAlpha, int maxAlpha) {
+        addInitializer(new AlphaInitializer(minAlpha, maxAlpha));
+        return this;
+    }
+
+    /**
+     * Adds a modifier to the Particle system, it will be executed on each update.
+     *
+     * @param modifier modifier to be added to the ParticleSystem
+     */
+    public ParticleSurface addModifier(ParticleModifier modifier) {
+        model.add(modifier);
+        return this;
+    }
+
+    public void emitWithGravity(int[] location, int width, int height, int gravity, int particlesPerSecond) {
+        model.configureEmitter(mParentLocation, location, width, height, gravity);
+        startEmitting(particlesPerSecond);
+    }
+
+    /**
+     * Adds a custom initializer for emitted particles. The most common use case is the ability to
+     * update the initializer in real-time instead of adding new ones ontop of the existing one.
+     *
+     * @param initializer The non-null initializer to add.
+     * @return This.
+     */
+    public ParticleSurface addInitializer(ParticleInitializer initializer) {
+        if (initializer != null) {
+            model.add(initializer);
+        }
+        return this;
+    }
+
+    private void startEmitting(int particlesPerSecond) {
+        model.startEmitting(particlesPerSecond, -1);
+        updateParticlesBeforeStartTime(particlesPerSecond);
+//        mTimer = new Timer();
+//        mTimer.schedule(mTimerTask, 0, TIMER_TASK_INTERVAL);
+        mDrawingView.schedule(this, model, TIMER_TASK_INTERVAL);
+    }
+
+    public long mCurrentTime = 0;
+    private void updateParticlesBeforeStartTime(int particlesPerSecond) {
+        if (particlesPerSecond == 0) {
+            return;
+        }
+        long currentTimeInMs = mCurrentTime / 1000;
+        long framesCount = currentTimeInMs / particlesPerSecond;
+        if (framesCount == 0) {
+            return;
+        }
+        long frameTimeInMs = mCurrentTime / framesCount;
+        for (int i = 1; i <= framesCount; i++) {
+            onUpdate(frameTimeInMs * i + 1);
+        }
+    }
+
+
+    public void onUpdate(long miliseconds) {
+        model.onUpdate(mTimeToLive, miliseconds);
+
+//        if (null != mDrawingView) {
+//            mDrawingView.postInvalidate();
+//        }
+    }
+
+    private ParticleModel model;
+
+    public float dpToPx(float dp) {
+        return dp * mDpToPxScale;
+    }
+}
