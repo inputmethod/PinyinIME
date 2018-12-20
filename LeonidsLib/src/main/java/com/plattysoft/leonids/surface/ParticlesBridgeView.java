@@ -44,33 +44,16 @@ public class ParticlesBridgeView extends ParticlesView {
                 ps.mCurrentTime += interval;
             }
 
-            canvas.drawColor(Color.BLACK);
             model.drawParticles(canvas);
         }
     }
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Toast.makeText(getContext(), "SurfaceView已经销毁", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        Toast.makeText(getContext(), "SurfaceView已经创建", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
-        // 这里是SurfaceView发生变化的时候触发的部分
-        //obj.setBound(width, height);
-    }
 
     private ParticleModel model;
     private WeakReference<ParticleSurface> mPs;
     public void schedule(ParticleSurface ps, ParticleModel model, long timerTaskInterval) {
         mPs = new WeakReference<>(ps);
         this.model = model;
-        startRenderingThread(timerTaskInterval);
+        setRenderingInterval(timerTaskInterval);
     }
 }

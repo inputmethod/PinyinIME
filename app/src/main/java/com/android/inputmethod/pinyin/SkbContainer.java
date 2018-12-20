@@ -18,6 +18,7 @@ package com.android.inputmethod.pinyin;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -30,6 +31,12 @@ import android.view.View.OnTouchListener;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
+
+import com.plattysoft.leonids.ParticleSurface;
+import com.plattysoft.leonids.initializers.ScaleInitializer;
+import com.plattysoft.leonids.modifiers.ExtraSpeedModifier;
+import com.plattysoft.leonids.modifiers.ScaleModifier;
+import com.plattysoft.leonids.surface.ParticlesBridgeView;
 
 import java.lang.reflect.Method;
 
@@ -471,6 +478,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
             if (null != mSkv) {
                 mSoftKeyDown = mSkv.onKeyPress(x - mSkvPosInContainer[0], y
                         - mSkvPosInContainer[1], mLongPressTimer, false);
+                snowing();
             }
             break;
 
@@ -490,9 +498,11 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
             SoftKeyboardView skv = inKeyboardView(x, y, mSkvPosInContainer);
             if (null != skv) {
                 if (skv != mSkv) {
+                    stopSnowing();
                     mSkv = skv;
                     mSoftKeyDown = mSkv.onKeyPress(x - mSkvPosInContainer[0], y
                             - mSkvPosInContainer[1], mLongPressTimer, true);
+                    snowing();
                 } else if (null != skv) {
                     if (null != mSkv) {
                         mSoftKeyDown = mSkv.onKeyMove(
@@ -677,5 +687,53 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
             }
             return value;
         }
+    }
+
+
+    private ParticleSurface flakingParticle;
+
+    private void stopSnowing() {
+        if (null != flakingParticle) {
+            flakingParticle.stopEmitting();
+        }
+    }
+
+    private void snowing() {
+        if (null == mSkv) return;
+
+        stopSnowing();
+
+        ParticlesBridgeView particlesBridgeView = mSkv;
+
+        Drawable flakingSnow = getResources().getDrawable(R.drawable.christ_snow_piece_bg);
+        int width = particlesBridgeView.getWidth();
+        int x = (int) (-0.2f * width);
+        int snowWidth = width - 2 * x;
+
+        int[] parentLocation = new int[2];
+        particlesBridgeView.getLocationInWindow(parentLocation);
+        int y = parentLocation[1];
+        int maxParticles = 90;
+        int particlesPerSecond = 10;
+        long timeToLive = maxParticles * 1000 / particlesPerSecond;
+        flakingParticle = new ParticleSurface(particlesBridgeView, maxParticles, flakingSnow, timeToLive);
+
+        flakingParticle
+                .setSpeedModuleAndAngleRange(0.03f, 0.07f, 60, 120)
+                .setAlphaRange(50, 255)
+                .addModifier(new ScaleModifier(1f, 1.2f, 0, timeToLive))
+                .addModifier(getExtraSpeedModifier())
+                .addInitializer(new ScaleInitializer(0.8f, 1.5f))
+                .emitWithGravity(new int[]{x, y}, snowWidth, 0, Gravity.BOTTOM, 10);
+    }
+    private ExtraSpeedModifier extraSpeedModifier;
+    private ExtraSpeedModifier getExtraSpeedModifier() {
+        if (null == extraSpeedModifier) {
+            float widthRange = mSkv.getWidth() / 3;
+            float randomStart = widthRange;
+            float randomRange = widthRange;
+            extraSpeedModifier = new ExtraSpeedModifier(randomStart, randomRange, 0, 0);
+        }
+        return extraSpeedModifier;
     }
 }

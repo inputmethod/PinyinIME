@@ -660,4 +660,13 @@ public class ParticleSurface {
     public float dpToPx(float dp) {
         return dp * mDpToPxScale;
     }
+
+    /**
+     * Stops emitting new particles, but will draw the existing ones until their timeToLive expire
+     * For an cancellation and stop drawing of the particles, use cancel instead.
+     */
+    public void stopEmitting() {
+        // The time to be emitting is the current time (as if it was a time-limited emitter
+        model.setEmittingTime(mCurrentTime);
+    }
 }

@@ -7,16 +7,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.SurfaceHolder;
-import android.widget.Toast;
 
 import com.android.inputmethod.pinyin.R;
-import com.plattysoft.leonids.surface.ParticlesView;
+import com.plattysoft.leonids.surface.ParticlesBridgeView;
 
 /*
  * 这个类就是加工了SurfaceView之后的类，所有要运动的物件都最终放在这里进行绘制
  */
-public class Playground extends ParticlesView {
+public class Playground extends ParticlesBridgeView {
     private Sprite flyingIcon;
 
     public Playground(Context c) {
@@ -34,25 +32,14 @@ public class Playground extends ParticlesView {
     @Override
     protected void updateParticles(Canvas canvas, long interval) {
         canvas.drawColor(Color.BLACK);
+        super.updateParticles(canvas, interval);
         flyingIcon.getNextPos();
         flyingIcon.drawSelf(canvas); // 把SurfaceView的画布传给物件，物件会用这个画布将自己绘制到上面的某个位置
         onDraw(canvas);
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder arg0) {
-        Toast.makeText(getContext(), "SurfaceView已经销毁", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder arg0) {
-        Toast.makeText(getContext(), "SurfaceView已经创建", Toast.LENGTH_LONG).show();
-        startRenderingThread(10);
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
+    protected void onSurfaceChanged(int width, int height) {
         // 这里是SurfaceView发生变化的时候触发的部分
         flyingIcon.setBound(width, height);
     }
