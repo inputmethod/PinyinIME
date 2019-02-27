@@ -8,17 +8,39 @@
 '
 @startuml
 ' Android framework interfaces/classes
-
+package android <<Rectangle>> {
 interface Preference.OnPreferenceChangeListener #gray
 
 class Service #gray
 class InputMethodService #gray
 class PreferenceActivity #gray
 
+class Configuration #gray
+}
+
 ' interfaces/classes
+package main <<Rectangle>> {
 class PinyinDecoderService
-class PinyinIME
+class PinyinIME {
+    +onCreate():void
+    +onDestroy():void
+    +onConfigurationChanged(Configuration):void
+    +onKeyDown(int, KeyEvent):boolean
+    +onKeyUp(int, KeyEvent):void
+    +onCreateCandidatesView():View
+    +responseSoftKeyEvent(SoftKey):void
+    +onCreateInputView():View
+    +onStartInput(EditorInfo, boolean):void
+    +onStartInputView(EditorInfo, boolean):void
+    +onFinishInputView(boolean):void
+    +onFinishInput():void
+    +onFinsihCandidatesView(boolean):void
+    +onDisplayCompletion(CompletionInfo[]):void
+    +requestHideSelf(int):void
+    +showOptionsMenu():void
+}
 class SettingsActivity
+}
 
 ' relationship
 ' inheritance
