@@ -173,8 +173,7 @@ public class SoftKeyToggle extends SoftKey {
     public boolean isKeyCodeKey() {
         ToggleState state = getToggleState();
         if (null != state) {
-            if (state.mKeyCode > 0) return true;
-            return false;
+            return state.mKeyCode > 0;
         }
         return super.isKeyCodeKey();
     }
@@ -183,8 +182,7 @@ public class SoftKeyToggle extends SoftKey {
     public boolean isUserDefKey() {
         ToggleState state = getToggleState();
         if (null != state) {
-            if (state.mKeyCode < 0) return true;
-            return false;
+            return state.mKeyCode < 0;
         }
         return super.isUserDefKey();
     }
@@ -193,10 +191,7 @@ public class SoftKeyToggle extends SoftKey {
     public boolean isUniStrKey() {
         ToggleState state = getToggleState();
         if (null != state) {
-            if (null != state.mKeyLabel && state.mKeyCode == 0) {
-                return true;
-            }
-            return false;
+            return null != state.mKeyLabel && state.mKeyCode == 0;
         }
         return super.isUniStrKey();
     }

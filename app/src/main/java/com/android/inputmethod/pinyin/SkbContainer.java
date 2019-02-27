@@ -268,7 +268,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
 
         Resources r = getContext().getResources();
         if (null == mSkbFlipper) {
-            mSkbFlipper = (ViewFlipper) findViewById(R.id.alpha_floatable);
+            mSkbFlipper = findViewById(R.id.alpha_floatable);
         }
         mMajorView = (SoftKeyboardView) mSkbFlipper.getChildAt(0);
 
@@ -535,11 +535,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
             break;
         }
 
-        if (null == mSkv) {
-            return false;
-        }
-
-        return true;
+        return null != mSkv;
     }
 
     // Function for interface OnTouchListener, it is used to handle touch events
@@ -653,11 +649,11 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
                     synchronized (PropertyUtils.class) {
                         if (null == set) {
                             Class<?> cls = Class.forName("android.os.SystemProperties");
-                            set = cls.getDeclaredMethod("set", new Class<?>[]{String.class, String.class});
+                            set = cls.getDeclaredMethod("set", String.class, String.class);
                         }
                     }
                 }
-                set.invoke(null, new Object[]{prop, value});
+                set.invoke(null, prop, value);
             } catch (Throwable e) {
                 e.printStackTrace();
             }
@@ -671,7 +667,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
                     synchronized (PropertyUtils.class) {
                         if (null == get) {
                             Class<?> cls = Class.forName("android.os.SystemProperties");
-                            get = cls.getDeclaredMethod("get", new Class<?>[]{String.class, String.class});
+                            get = cls.getDeclaredMethod("get", String.class, String.class);
                         }
                     }
                 }

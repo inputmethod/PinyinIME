@@ -312,10 +312,7 @@ public class XmlKeyboardLoader {
             keyHeight = getFloat(mXrp, XMLATTR_KEY_HEIGHT, defAttr.keyHeight);
             repeat = getBoolean(mXrp, XMLATTR_KEY_REPEAT, defAttr.repeat);
             balloon = getBoolean(mXrp, XMLATTR_KEY_BALLOON, defAttr.balloon);
-            if (keyType < 0 || keyWidth <= 0 || keyHeight <= 0) {
-                return false;
-            }
-            return true;
+            return keyType >= 0 && !(keyWidth <= 0) && !(keyHeight <= 0);
         }
     }
 

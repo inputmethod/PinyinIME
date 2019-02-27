@@ -208,11 +208,8 @@ public class Environment {
     }
 
     public boolean hasHardKeyboard() {
-        if (mConfig.keyboard == Configuration.KEYBOARD_NOKEYS
-                || mConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
-            return false;
-        }
-        return true;
+        return mConfig.keyboard != Configuration.KEYBOARD_NOKEYS
+                && mConfig.hardKeyboardHidden != Configuration.HARDKEYBOARDHIDDEN_YES;
     }
 
     public boolean needDebug() {

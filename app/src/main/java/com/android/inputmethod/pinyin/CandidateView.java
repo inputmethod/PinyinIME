@@ -325,11 +325,7 @@ public class CandidateView extends View {
             mEnableActiveHighlight = enableActiveHighlight;
         }
 
-        if (!calculatePage(mPageNo)) {
-            mUpdateArrowStatusWhenDraw = true;
-        } else {
-            mUpdateArrowStatusWhenDraw = false;
-        }
+        mUpdateArrowStatusWhenDraw = !calculatePage(mPageNo);
 
         invalidate();
     }

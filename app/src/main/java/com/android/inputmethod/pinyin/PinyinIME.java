@@ -429,10 +429,8 @@ public class PinyinIME extends InputMethodService {
                 }
                 return true;
             } else {
-                if (keyCode >= KeyEvent.KEYCODE_A
-                        && keyCode <= KeyEvent.KEYCODE_Z) {
-                    return true;
-                }
+                return keyCode >= KeyEvent.KEYCODE_A
+                        && keyCode <= KeyEvent.KEYCODE_Z;
             }
         } else if (keyChar != 0 && keyChar != '\t') {
             if (realAction) {
@@ -910,12 +908,8 @@ public class PinyinIME extends InputMethodService {
             }
 
             // Bind service
-            if (bindService(serviceIntent, mPinyinDecoderServiceConnection,
-                    Context.BIND_AUTO_CREATE)) {
-                return true;
-            } else {
-                return false;
-            }
+            return bindService(serviceIntent, mPinyinDecoderServiceConnection,
+                    Context.BIND_AUTO_CREATE);
         }
         return true;
     }
@@ -1647,8 +1641,7 @@ public class PinyinIME extends InputMethodService {
         }
 
         public boolean isSplStrFull() {
-            if (mSurface.length() >= PY_STRING_MAX - 1) return true;
-            return false;
+            return mSurface.length() >= PY_STRING_MAX - 1;
         }
 
         public void addSplChar(char ch, boolean reset) {
@@ -1861,11 +1854,7 @@ public class PinyinIME extends InputMethodService {
                     }
                 }
 
-                if (mSplStart.length == mFixedLen + 2) {
-                    mFinishSelection = true;
-                } else {
-                    mFinishSelection = false;
-                }
+                mFinishSelection = mSplStart.length == mFixedLen + 2;
             } catch (RemoteException e) {
                 Log.w(TAG, "PinyinDecoderService died", e);
             } catch (Exception e) {
@@ -1949,11 +1938,7 @@ public class PinyinIME extends InputMethodService {
             if (pageNo < 0) return false;
 
             // Page pageNo's ending information is not ready.
-            if (mPageStart.size() <= pageNo + 1) {
-                return false;
-            }
-
-            return true;
+            return mPageStart.size() > pageNo + 1;
         }
 
         public boolean preparePage(int pageNo) {
@@ -1980,12 +1965,7 @@ public class PinyinIME extends InputMethodService {
 
             // Try to find if there are available new items to display.
             // If no new item, return false;
-            if (mPageStart.elementAt(pageNo) >= mCandidatesList.size()) {
-                return false;
-            }
-
-            // If there are new items, return true;
-            return true;
+            return mPageStart.elementAt(pageNo) < mCandidatesList.size();
         }
 
         public void preparePredicts(CharSequence history) {
@@ -2032,24 +2012,17 @@ public class PinyinIME extends InputMethodService {
 
         public boolean pageForwardable(int currentPage) {
             if (mPageStart.size() <= currentPage + 1) return false;
-            if (mPageStart.elementAt(currentPage + 1) >= mTotalChoicesNum) {
-                return false;
-            }
-            return true;
+            return mPageStart.elementAt(currentPage + 1) < mTotalChoicesNum;
         }
 
         public boolean pageBackwardable(int currentPage) {
-            if (currentPage > 0) return true;
-            return false;
+            return currentPage > 0;
         }
 
         public boolean charBeforeCursorIsSeparator() {
             int len = mSurface.length();
             if (mCursorPos > len) return false;
-            if (mCursorPos > 0 && mSurface.charAt(mCursorPos - 1) == '\'') {
-                return true;
-            }
-            return false;
+            return mCursorPos > 0 && mSurface.charAt(mCursorPos - 1) == '\'';
         }
 
         public int getCursorPos() {
