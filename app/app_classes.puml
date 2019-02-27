@@ -1,0 +1,31 @@
+
+' SeeTo:
+' http://plantuml.com/zh/class-diagram
+
+' Goal: present all classes in this application
+' Note:
+' 1. the color of framework will be gray
+'
+@startuml
+' Android framework interfaces/classes
+
+interface Preference.OnPreferenceChangeListener #gray
+
+class Service #gray
+class InputMethodService #gray
+class PreferenceActivity #gray
+
+' interfaces/classes
+class PinyinDecoderService
+class PinyinIME
+class SettingsActivity
+
+' relationship
+' inheritance
+Service <|-- PinyinDecoderService
+InputMethodService <|-- PinyinIME
+PreferenceActivity <|-- SettingsActivity
+Preference.OnPreferenceChangeListener <|.. SettingsActivity
+' decomposition
+
+@enduml
