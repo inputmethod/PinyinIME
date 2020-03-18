@@ -1,0 +1,18 @@
+The Overview
+
+Layer:
+UI -use-> Domain <-use- Data
+
+UI: (View/Fragment/Activity/Service)
+  - send action to domain objects.
+  - retrieve data from domain and display it.
+  - know nothing about objects/classes in Data layer. (SRP, OCP)
+
+Domain: (keyboard input method specifics)
+  - action handler interface for UI.
+  - data presenter interface for UI, input method structure, such as keyboard and key.
+  - mediator between UI and Data layer, but NOT know the concrete object in Data layer. (DIP)
+  - data controller interface to be implement by Data layer.
+
+Data: (Db, File, System Service, Framework or 3rd party libraries)
+  - implementation of domain interface to provide concrete data objects.
