@@ -16,7 +16,9 @@
 
 package com.android.inputmethod.pinyin;
 
-import com.android.inputmethod.pinyin.SoftKeyboard.KeyRow;
+import com.android.inputmethod.pinyin.data.Environment;
+import com.ime.domain.SoftKey;
+import com.ime.domain.ToggleStates;
 
 import android.content.res.Resources;
 import android.view.inputmethod.EditorInfo;
@@ -25,6 +27,7 @@ import android.view.inputmethod.EditorInfo;
  * Switcher used to switching input mode between Chinese, English, symbol,etc.
  */
 public class InputModeSwitcher {
+    private static final int DEFAULT_ROW_ID = 0;
     /**
      * User defined key code, used by soft keyboard.
      */
@@ -204,11 +207,6 @@ public class InputModeSwitcher {
     public static final int MODE_UNSET = 0;
 
     /**
-     * Maximum toggle states for a soft keyboard.
-     */
-    public static final int MAX_TOGGLE_STATES = 4;
-
-    /**
      * The input mode for the current edit box.
      */
     private int mInputMode = MODE_UNSET;
@@ -341,36 +339,6 @@ public class InputModeSwitcher {
      * QWERTY row toggling state for email address input.
      */
     private int mToggleRowEmailAddress;
-
-    class ToggleStates {
-        /**
-         * If it is true, this soft keyboard is a QWERTY one.
-         */
-        boolean mQwerty;
-
-        /**
-         * If {@link #mQwerty} is true, this variable is used to decide the
-         * letter case of the QWERTY keyboard.
-         */
-        boolean mQwertyUpperCase;
-
-        /**
-         * The id of enabled row in the soft keyboard. Refer to
-         * {@link com.android.inputmethod.pinyin.SoftKeyboard.KeyRow} for
-         * details.
-         */
-        public int mRowIdToEnable;
-
-        /**
-         * Used to store all other toggle states for the current input mode.
-         */
-        public int mKeyStates[] = new int[MAX_TOGGLE_STATES];
-
-        /**
-         * Number of states to toggle.
-         */
-        public int mKeyStatesNum;
-    }
 
     public InputModeSwitcher(PinyinIME imeService) {
         mImeService = imeService;
@@ -695,7 +663,8 @@ public class InputModeSwitcher {
         return mEnterKeyNormal;
     }
 
-    public boolean tryHandleLongPressSwitch(int keyCode) {
+    public boolean tryHandleLongPressSwitch(SoftKey softKey) {
+        int keyCode = softKey.getKeyCode();
         if (USERDEF_KEYCODE_LANG_2 == keyCode
                 || USERDEF_KEYCODE_PHONE_SYM_4 == keyCode) {
             mImeService.showOptionsMenu();
@@ -772,7 +741,7 @@ public class InputModeSwitcher {
             }
 
             // Toggle rows for QWERTY.
-            mToggleStates.mRowIdToEnable = KeyRow.DEFAULT_ROW_ID;
+            mToggleStates.mRowIdToEnable = DEFAULT_ROW_ID;
             if (variation == EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
                 mToggleStates.mRowIdToEnable = mToggleRowEmailAddress;
             } else if (variation == EditorInfo.TYPE_TEXT_VARIATION_URI) {

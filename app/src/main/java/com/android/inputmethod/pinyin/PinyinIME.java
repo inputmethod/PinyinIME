@@ -47,6 +47,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.android.inputmethod.pinyin.data.Environment;
+import com.ime.domain.KeyMapDream;
+import com.ime.domain.Settings;
+import com.ime.domain.SoftKey;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -150,7 +155,7 @@ public class PinyinIME extends InputMethodService {
     /**
      * The current IME status.
      *
-     * @see com.android.inputmethod.pinyin.PinyinIME.ImeState
+     * @see PinyinIME.ImeState
      */
     private ImeState mImeState = ImeState.STATE_IDLE;
 

@@ -31,6 +31,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
 
+import com.android.inputmethod.pinyin.data.Environment;
+import com.android.inputmethod.pinyin.data.XmlKeyboardLoader;
+import com.ime.domain.SkbPool;
+import com.ime.domain.SoftKey;
+import com.ime.domain.SoftKeyboard;
+
 import java.lang.reflect.Method;
 
 /**
@@ -60,7 +66,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
     /**
      * The current soft keyboard layout.
      * 
-     * @see com.android.inputmethod.pinyin.InputModeSwitcher for detailed layout
+     * @see InputModeSwitcher for detailed layout
      *      definitions.
      */
     private int mSkbLayout = 0;
@@ -273,31 +279,30 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         mMajorView = (SoftKeyboardView) mSkbFlipper.getChildAt(0);
 
         SoftKeyboard majorSkb = null;
-        SkbPool skbPool = SkbPool.getInstance();
 
         switch (mSkbLayout) {
         case R.xml.skb_qwerty:
-            majorSkb = skbPool.getSoftKeyboard(R.xml.skb_qwerty,
+            majorSkb = getSoftKeyboard(R.xml.skb_qwerty,
                     R.xml.skb_qwerty, screenWidth, skbHeight, getContext());
             break;
 
         case R.xml.skb_sym1:
-            majorSkb = skbPool.getSoftKeyboard(R.xml.skb_sym1, R.xml.skb_sym1,
+            majorSkb = getSoftKeyboard(R.xml.skb_sym1, R.xml.skb_sym1,
                     screenWidth, skbHeight, getContext());
             break;
 
         case R.xml.skb_sym2:
-            majorSkb = skbPool.getSoftKeyboard(R.xml.skb_sym2, R.xml.skb_sym2,
+            majorSkb = getSoftKeyboard(R.xml.skb_sym2, R.xml.skb_sym2,
                     screenWidth, skbHeight, getContext());
             break;
 
         case R.xml.skb_smiley:
-            majorSkb = skbPool.getSoftKeyboard(R.xml.skb_smiley,
+            majorSkb = getSoftKeyboard(R.xml.skb_smiley,
                     R.xml.skb_smiley, screenWidth, skbHeight, getContext());
             break;
 
         case R.xml.skb_phone:
-            majorSkb = skbPool.getSoftKeyboard(R.xml.skb_phone,
+            majorSkb = getSoftKeyboard(R.xml.skb_phone,
                     R.xml.skb_phone, screenWidth, skbHeight, getContext());
             break;
         default:
@@ -341,8 +346,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
             int miniSkbWidth = (int) (skbContainerWidth * 0.8);
             int miniSkbHeight = (int) (skbContainerHeight * 0.23);
 
-            SkbPool skbPool = SkbPool.getInstance();
-            SoftKeyboard skb = skbPool.getSoftKeyboard(popupResId, popupResId,
+            SoftKeyboard skb = getSoftKeyboard(popupResId, popupResId,
                     miniSkbWidth, miniSkbHeight, getContext());
             if (null == skb) return;
 
@@ -612,7 +616,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
                     if (mSoftKeyDown.isUserDefKey()) {
                         if (1 == mResponseTimes) {
                             if (mInputModeSwitcher
-                                    .tryHandleLongPressSwitch(mSoftKeyDown.mKeyCode)) {
+                                    .tryHandleLongPressSwitch(mSoftKeyDown)) {
                                 mDiscardEvent = true;
                                 resetKeyPress(0);
                             }
@@ -677,5 +681,20 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
             }
             return value;
         }
+    }
+
+    private SoftKeyboard getSoftKeyboard(int skbCacheId, int skbXmlId,
+                                 int skbWidth, int skbHeight, Context context) {
+
+        SkbPool skbPool = SkbPool.getInstance();
+        SoftKeyboard softKeyboard = skbPool.getSoftKeyboard(skbCacheId, skbXmlId, skbWidth, skbHeight);
+        if (null == softKeyboard) {
+            if (null != context) {
+                XmlKeyboardLoader xkbl = new XmlKeyboardLoader(context);
+                softKeyboard = skbPool.createSoftKeyboard(skbCacheId, skbXmlId, skbWidth, skbHeight, xkbl);
+            }
+        }
+
+        return softKeyboard;
     }
 }

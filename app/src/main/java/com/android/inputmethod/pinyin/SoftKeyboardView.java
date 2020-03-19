@@ -26,7 +26,11 @@ import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.android.inputmethod.pinyin.SoftKeyboard.KeyRow;
+import com.android.inputmethod.pinyin.data.Environment;
+import com.ime.domain.Settings;
+import com.ime.domain.SoftKey;
+import com.ime.domain.SoftKeyboard;
+import com.ime.domain.SoftKeyboard.KeyRow;
 
 import java.util.List;
 
@@ -248,12 +252,11 @@ public class SoftKeyboardView extends View {
             mBalloonOnKey.setBalloonBackground(keyHlBg);
 
             // Prepare the on-key balloon
-            int keyXMargin = mSoftKeyboard.getKeyXMargin();
-            int keyYMargin = mSoftKeyboard.getKeyYMargin();
+            int keyXMargin = mSoftKeyboard.getKeyXMargin(env.getKeyXMarginFactor());
+            int keyYMargin = mSoftKeyboard.getKeyYMargin(env.getKeyYMarginFactor());
             desired_width = mSoftKeyDown.width() - 2 * keyXMargin;
             desired_height = mSoftKeyDown.height() - 2 * keyYMargin;
-            textSize = env
-                    .getKeyTextSize(SoftKeyType.KEYTYPE_ID_NORMAL_KEY != mSoftKeyDown.mKeyType.mKeyTypeId);
+            textSize = env.getKeyTextSize(!mSoftKeyDown.isNormalKeyType());
             Drawable icon = mSoftKeyDown.getKeyIcon();
             if (null != icon) {
                 mBalloonOnKey.setBalloonConfig(icon, desired_width,
@@ -287,7 +290,7 @@ public class SoftKeyboardView extends View {
             desired_height = mSoftKeyDown.height()
                     + env.getKeyBalloonHeightPlus();
             textSize = env
-                    .getBalloonTextSize(SoftKeyType.KEYTYPE_ID_NORMAL_KEY != mSoftKeyDown.mKeyType.mKeyTypeId);
+                    .getBalloonTextSize(!mSoftKeyDown.isNormalKeyType());
             Drawable iconPopup = mSoftKeyDown.getKeyIconPopup();
             if (null != iconPopup) {
                 mBalloonPopup.setBalloonConfig(iconPopup, desired_width,
@@ -407,16 +410,16 @@ public class SoftKeyboardView extends View {
         mFunctionKeyTextSize = env.getKeyTextSize(true);
         // Draw the last soft keyboard
         int rowNum = mSoftKeyboard.getRowNum();
-        int keyXMargin = mSoftKeyboard.getKeyXMargin();
-        int keyYMargin = mSoftKeyboard.getKeyYMargin();
+        int keyXMargin = mSoftKeyboard.getKeyXMargin(env.getKeyXMarginFactor());
+        int keyYMargin = mSoftKeyboard.getKeyYMargin(env.getKeyYMarginFactor());
         for (int row = 0; row < rowNum; row++) {
             KeyRow keyRow = mSoftKeyboard.getKeyRowForDisplay(row);
             if (null == keyRow) continue;
-            List<SoftKey> softKeys = keyRow.mSoftKeys;
+            List<SoftKey> softKeys = keyRow.getSoftKeys();
             int keyNum = softKeys.size();
             for (int i = 0; i < keyNum; i++) {
                 SoftKey softKey = softKeys.get(i);
-                if (SoftKeyType.KEYTYPE_ID_NORMAL_KEY == softKey.mKeyType.mKeyTypeId) {
+                if (softKey.isNormalKeyType()) {
                     mPaint.setTextSize(mNormalKeyTextSize);
                 } else {
                     mPaint.setTextSize(mFunctionKeyTextSize);

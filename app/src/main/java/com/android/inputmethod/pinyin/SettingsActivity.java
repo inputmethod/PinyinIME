@@ -26,7 +26,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import com.android.inputmethod.pinyin.Settings;
+
+import com.ime.domain.Settings;
 import com.android.inputmethod.utils.ImmUtils;
 
 import android.content.Intent;

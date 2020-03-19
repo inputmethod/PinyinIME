@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package com.android.inputmethod.pinyin;
+package com.android.inputmethod.pinyin.data;
 
-import com.android.inputmethod.pinyin.SoftKeyboard.KeyRow;
+import com.ime.domain.SkbPool;
+import com.ime.domain.SkbTemplate;
+import com.ime.domain.SoftKey;
+import com.ime.domain.SoftKeyToggle;
+import com.ime.domain.SoftKeyType;
+import com.ime.domain.SoftKeyboard;
+import com.ime.domain.SoftKeyboard.KeyRow;
+import com.ime.domain.loader.IKeyboardLoader;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -32,7 +39,7 @@ import org.xmlpull.v1.XmlPullParserException;
  * Class used to load a soft keyboard or a soft keyboard template from xml
  * files.
  */
-public class XmlKeyboardLoader {
+public class XmlKeyboardLoader implements IKeyboardLoader {
     /**
      * The tag used to define an xml-based soft keyboard template.
      */
@@ -462,8 +469,13 @@ public class XmlKeyboardLoader {
 
                         // 1.2 Try to get the template from pool. If it is not
                         // in, the pool will try to load it.
-                        mSkbTemplate = skbPool.getSkbTemplate(skbTemplateId,
-                                mContext);
+                        mSkbTemplate = skbPool.getSkbTemplate(skbTemplateId);
+                        if (null == mSkbTemplate) {
+                            if (null != mContext) {
+                                XmlKeyboardLoader xkbl = new XmlKeyboardLoader(mContext);
+                                mSkbTemplate = skbPool.createSkbTemplate(skbTemplateId, xkbl);
+                            }
+                        }
 
                         if (null == mSkbTemplate
                                 || !attrSkb.getAttributes(attrDef)) {

@@ -16,6 +16,7 @@
 
 package com.android.inputmethod.pinyin;
 
+import com.android.inputmethod.pinyin.data.Environment;
 import com.android.inputmethod.pinyin.PinyinIME.DecodingInfo;
 
 import android.content.Context;
@@ -189,8 +190,8 @@ public class CandidatesContainer extends RelativeLayout implements
         }
     }
 
-    public void showCandidates(PinyinIME.DecodingInfo decInfo,
-            boolean enableActiveHighlight) {
+    public void showCandidates(DecodingInfo decInfo,
+                               boolean enableActiveHighlight) {
         if (null == decInfo) return;
         mDecInfo = decInfo;
         mCurrentPage = 0;

@@ -16,7 +16,9 @@
 
 package com.android.inputmethod.pinyin;
 
+import com.android.inputmethod.pinyin.data.Environment;
 import com.android.inputmethod.pinyin.IPinyinDecoderService;
+import com.android.inputmethod.pinyin.R;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -28,7 +30,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
 
 /**

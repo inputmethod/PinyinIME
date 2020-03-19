@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.PopupWindow;
 
+import com.android.inputmethod.pinyin.data.Environment;
+
 /**
  * Subclass of PopupWindow used as the feedback when user presses on a soft key
  * or a candidate.

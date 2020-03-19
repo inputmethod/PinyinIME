@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.inputmethod.pinyin;
-
-import com.android.inputmethod.pinyin.InputModeSwitcher.ToggleStates;
+package com.ime.domain;
 
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -244,14 +242,12 @@ public class SoftKeyboard {
         return mSkbCoreHeight + padding.top + padding.bottom;
     }
 
-    public int getKeyXMargin() {
-        Environment env = Environment.getInstance();
-        return (int) (mKeyXMargin * mSkbCoreWidth * env.getKeyXMarginFactor());
+    public int getKeyXMargin(float keyMarginFactorX) {
+        return (int) (mKeyXMargin * mSkbCoreWidth * keyMarginFactorX);
     }
 
-    public int getKeyYMargin() {
-        Environment env = Environment.getInstance();
-        return (int) (mKeyYMargin * mSkbCoreHeight * env.getKeyYMarginFactor());
+    public int getKeyYMargin(float keyMarginFactorY) {
+        return (int) (mKeyYMargin * mSkbCoreHeight * keyMarginFactorY);
     }
 
     public Drawable getSkbBackground() {
@@ -502,9 +498,8 @@ public class SoftKeyboard {
         return super.toString();
     }
 
-    class KeyRow {
-        static final int ALWAYS_SHOW_ROW_ID = -1;
-        static final int DEFAULT_ROW_ID = 0;
+    public static class KeyRow {
+        public static final int ALWAYS_SHOW_ROW_ID = -1;
 
         List<SoftKey> mSoftKeys;
         /**
@@ -516,5 +511,9 @@ public class SoftKeyboard {
         float mBottomF;
         int mTop;
         int mBottom;
+
+        public List<SoftKey> getSoftKeys() {
+            return mSoftKeys;
+        }
     }
 }
